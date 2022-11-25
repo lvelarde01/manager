@@ -1,0 +1,340 @@
+.col2,.row2>[class^=col-]{
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    background-color: rgba(39,41,43,0.03);
+    border: 1px solid rgba(39,41,43,0.1);
+}
+#root{
+  display: flex;
+    flex-wrap: nowrap;
+    height: 100vh !important;
+    height: -webkit-fill-available;
+    max-height: 100vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.bordered{
+  border: 1px solid gray;
+}
+.btn-toggle-nav a {
+    display: inline-flex;
+    padding: 0.1875rem 0.5rem;
+    margin-top: 0.125rem;
+    margin-left: 1.25rem;
+    text-decoration: none;
+}
+.form-style{
+  border-radius: 6px;
+}
+.form-style fieldset legend{
+  text-align: center;
+  font-size: 18px;
+  color: white;
+  background: rgb(30,135,37);
+  background: linear-gradient(31deg, rgba(30,135,37,0.896796218487395) 0%, rgba(15,80,19,0.7315301120448179) 67%, rgba(13,115,47,0.6951155462184874) 100%);
+  border-radius: 5px;
+}
+.form-style h2{
+  text-align: center;
+  font-size: 22px;
+  background: -webkit-linear-gradient(rgba(30, 135, 37, 0.897), #0f5013bb);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.form-style .form-control, .form-style .form-select{
+  border-width: 0 0 2px 0;
+  border-color: rgb(30,135,37);
+  outline: none;
+}
+.form-style .form-control:focus,.form-style .form-select:focus{
+  border-color: inherit;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  outline: none !important;
+  border-color: rgb(30,135,37);
+  color: gray;
+}
+.form-style .form-select option:first-child{
+  color: gray;
+  background: rgb(216, 216, 216);
+}
+.form-style .form-select option[value=""]{
+  background: purple;
+
+}
+.form-style .form-select option:checked{
+  background: rgb(30,135,37);
+  color: white;
+}
+.form-style .form-select.required{
+color: red;
+}
+.form-style .form-select option:hover{
+  background: green !important;
+}
+
+.border-gradient {
+  border-bottom: 10px solid;
+  border-image-slice: 1;
+  border-width: 5px;
+}
+.border-gradient-purple {
+  border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+}
+.border-gradient-green {
+  border-image-source: linear-gradient(to left, #00C853, #B2FF59);
+}
+
+//code btn
+@mixin btn-create(
+  $color: #03001e,
+  $color2: #7303c0,
+  $color3: #ec38bc,
+  $color4: #501b41
+) {
+  $bg-color: linear-gradient(75deg, $color, $color2, $color3, $color4);
+  $bg-color2: -webkit-linear-gradient(rgba(30, 135, 37, 0.897), #0f5013bb);
+
+
+  h2{
+    text-align: center;
+    font-size: 22px;
+    background:$bg-color ;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  fieldset legend{
+    text-align: center;
+    font-size: 18px;
+    color: white;
+    background:$bg-color;
+    border-radius: 5px;
+    animation: colors 12s ease-in-out infinite;
+    transition: 1500ms background-position ease-in-out;
+  }
+  .form-control, .form-select{
+    border-width: 0 0 2px 0;
+    border-image-slice: 1;
+    border-image-source: $bg-color !important;
+    outline: none;
+  }
+  .form-control:focus,.form-select:focus{
+    border-color: inherit;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    outline: none !important;
+    border-color: $bg-color;
+    color: gray;
+  }
+  .form-select option:checked{
+    background: $color2;
+    color: white;
+  }
+  //background: $color;
+      .btn-primary {
+        padding-top: 7px;
+        padding-bottom: 7px;
+        padding-left: 12px;
+        padding-right: 12px;
+        border-radius: 5px;
+        border-color: white;
+        background-image: $bg-color;
+        background-size: 300%;
+        background-position: left;
+        transition: 1500ms background-position ease-in-out;
+        color: white;
+        &:hover {
+          background-position: right;
+        }
+      }
+    
+  
+  @keyframes colors {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+}
+@mixin sidebar-create(
+  $color: #03001e,
+  $color2: #7303c0,
+  $color3: #ec38bc,
+  $color4: #501b41
+) {
+  $bg-color: linear-gradient(75deg, $color, $color2, $color3, $color4);
+  $bg-color2: -webkit-linear-gradient(rgba(30, 135, 37, 0.897), #0f5013bb);
+  background: $bg-color;
+  min-width: 280px;
+}
+@mixin navbar-create(
+  $color: #03001e,
+  $color2: #7303c0,
+  $color3: #ec38bc,
+  $color4: #501b41
+) {
+  $bg-color: linear-gradient(75deg, $color, $color2, $color3, $color4);
+  $bg-color2: -webkit-linear-gradient(rgba(30, 135, 37, 0.897), #0f5013bb);
+  background: $bg-color;
+  a{
+    color: white !important;
+  }
+  .btn-primary{
+    border: 1px solid $color;
+    background: $bg-color;
+    background-image: $bg-color;
+    background-size: 300%;
+    background-position: left;
+    transition: 1500ms background-position ease-in-out;
+    color: white;
+    &:hover {
+      background-position: right;
+    }
+    &:focus {
+      outline: 0 !important;
+      box-shadow: none !important;
+    }
+    &:active {
+      outline: 0 !important;
+    }
+  }
+}
+.red-style {
+  @include btn-create(#000000, #e74c3c, #000000, #e74c3c);
+}
+.red-style-sidebar{
+  @include sidebar-create(#000000, #e74c3c, #000000, #e74c3c);
+}
+.red-style-navbar{
+  @include navbar-create(#000000, #e74c3c, #000000, #e74c3c);
+}
+
+.blue-style {
+  @include btn-create(#000046, #1cb5e0, #000046, #1cb5e0);
+}
+.blue-style-sidebar{
+  @include sidebar-create(#000046, #1cb5e0, #000046, #1cb5e0);
+}
+.blue-style-navbar{
+  @include navbar-create(#000046, #1cb5e0, #000046, #1cb5e0);
+}
+
+
+.black-style {
+  @include btn-create(#646463, #1d2020, #1f1e20, #d8dac4);
+}
+.black-style-sidebar{
+  @include sidebar-create(#33332a, #1f2222, #1e1d22, #181815);
+}
+.black-style-navbar{
+  @include navbar-create(#33332a, #1f2222, #1e1d22, #181815);
+}
+
+.green-style {
+  @include btn-create(#00bf8f, #001510, #00bf8f, #001510);
+}
+.green-style-sidebar{
+  @include sidebar-create(#00bf8f, #001510, #00bf8f, #001510);
+}
+.green-style-navbar{
+  @include navbar-create(#00bf8f, #001510, #00bf8f, #001510);
+}
+
+.purple-style {
+  @include btn-create(#03001e, #7303c0, #ec38bc, #501b41);
+}
+.purple-style-sidebar{
+  @include sidebar-create(#03001e, #7303c0, #ec38bc, #501b41);
+}
+.purple-style-navbar{
+  @include navbar-create(#03001e, #7303c0, #ec38bc, #501b41);
+}
+
+.yellow-style {
+  @include btn-create(#ffe000, #799f0c, #cac531, #f3f9a7);
+}
+.yellow-style-sidebar{
+  @include sidebar-create(#ffe000, #799f0c, #cac531, #f3f9a7);
+}
+.yellow-style-navbar{
+  @include navbar-create(#ffe000, #799f0c, #cac531, #f3f9a7);
+}
+
+@mixin login-create(
+  $color: #03001e,
+  $color2: #7303c0,
+  $color3: #ec38bc,
+  $color4: #501b41
+) {
+  $bg-color: linear-gradient(75deg, $color, $color2, $color3, $color4);
+  $bg-color2: -webkit-linear-gradient(rgba(30, 135, 37, 0.897), #0f5013bb);
+
+  footer{
+    background: $bg-color !important;
+  }
+  
+  .btn-primary{
+    border: none !important;
+    background: $bg-color;
+    background-image: $bg-color;
+    background-size: 300%;
+    background-position: left;
+    transition: 1500ms background-position ease-in-out;
+    color: white;
+    &:hover {
+      background-position: right;
+    }
+    &:focus {
+      outline: 0 !important;
+      box-shadow: none !important;
+    }
+    &:active {
+      outline: 0 !important;
+    }
+  }
+}
+
+
+
+.red-style-login{
+  @include login-create(#000000, #e74c3c, #000000, #e74c3c);
+}
+.blue-style-login {
+  @include login-create(#000046, #1cb5e0, #000046, #1cb5e0);
+}
+.black-style-login {
+  @include login-create(#646463, #1d2020, #1f1e20, #d8dac4);
+}
+.green-style-login {
+  @include login-create(#00bf8f, #001510, #00bf8f, #001510);
+}
+.purple-style-login {
+  @include login-create(#03001e, #7303c0, #ec38bc, #501b41);
+}
+.yellow-style-login{
+  @include login-create(#ffe000, #799f0c, #cac531, #f3f9a7);
+}
+
+.divider:after,
+.divider:before {
+content: "";
+flex: 1;
+height: 1px;
+background: #eee;
+}
+.h-custom {
+height: calc(100% - 73px);
+}
+@media (max-width: 450px) {
+.h-custom {
+height: 100%;
+}
+}
