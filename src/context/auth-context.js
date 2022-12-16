@@ -1,5 +1,5 @@
 import React,{createContext,useState,useEffect} from "react";
-import { checkLogin } from "../requests/users";
+import { checkLogin,setLocal } from "../requests/users";
 
 const AuthContext = createContext();
 
@@ -17,6 +17,9 @@ const AuthProvider = ({children}) =>{
       }, [Auth]);
 
     const handlerAuth = (dataUserObj)=>{
+        console.log("handler activate");
+        console.log(dataUserObj);
+        setLocal(dataUserObj);
         setAuth({...dataUserObj});
     }
     const data = {Auth,handlerAuth};
