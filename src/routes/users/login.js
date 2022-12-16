@@ -1,30 +1,76 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect,useState,submitForm } from 'react'
 import {Link,Form,redirect,useActionData,useNavigate} from 'react-router-dom';
 import { getlogin,validateLogin,checkLogin } from '../../requests/users';
+import AuthContext from "../../context/auth-context"
 
-export async function action({ request, params }) {
-  const formData = await request.formData();
-  const updates = Object.fromEntries(formData);
-  const validates = await validateLogin(updates);
-  if(validates.validate){
-    return validates;
-  }
-  const result =  await getlogin(updates);
-    if(!result.validate){
-    return result;
-  }
-  return redirect("/");
-}
 export async function loader({ request}) {
- }
+
+}
 
 export default function Login() {
   let error = useActionData();
+  const {Auth,handlerAuth} = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors,setErrors] = useState(null);
+  const [loading,setLoading] = useState(false);
+  const [showPW,setShowPW] = useState(false);
 
+  const handlerShowPW = ()=>{
+    setShowPW(!showPW);
+  }
+  
+  const handlerUserChange = (event) =>{
+    setUsername(event.target.value);
+  }
+  const handlerPassChange = (event) =>{
+    setPassword(event.target.value);
+  }
+  useEffect(()=>{
+    if(!error){
+      setErrors(null);
+    }
+    if(handleCheckSubmit()){
+      setIsDisabled(false);
+    }else{
+      setIsDisabled(true);
+    }
+    
+  },[username,password]);
+
+  const handleCheckSubmit = ()=>{
+    return (username.length > 5 && password.length > 5);
+  }
+  async function handleSubmit(event){
+    event.preventDefault();
+    setLoading(true);
+    if (!handleCheckSubmit()) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
+      return;
+    }
+    const result =  await getlogin({username,password});
+    if(!result.validate){
+     
+      setTimeout(() => {
+        setLoading(false);
+        setErrors(result);
+      }, 3000);
+      return ;
+  }
+  const query = await handlerAuth(result);
+    setIsDisabled(true);
+    navigate('/');
+
+    // actual submit logic...
+  };
   
 
   return (
-    <div className="vw-100 green-style-login">
+    <div className={`vw-100 ${Auth.theme || "green" }-style-login`}>
   <div className="container-fluid h-custom ">
     <div className="row d-flex justify-content-center align-items-center h-100">
       <div className="col-md-9 col-lg-6 col-xl-5">
@@ -32,7 +78,7 @@ export default function Login() {
           className="img-fluid" alt-text="Sample image"/>
       </div>
       <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <Form method='post'>
+        <Form method='post' onSubmit={handleSubmit}>
           <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
             <p className="lead fw-normal mb-0 me-3">Acceder con </p>
             <button type="button" className="btn btn-primary btn-floating rounded-circle mx-1">
@@ -54,17 +100,18 @@ export default function Login() {
 
           
           <div className="form-outline mb-4">
-            <input type="text" name='username'  required className={error?.username ?`form-control form-control-lg border border-danger text-danger`:`form-control form-control-lg` }
+            <input type="text" name='username' onChange={handlerUserChange}     required className={errors?.username ?`form-control form-control-lg border border-danger text-danger`:`form-control form-control-lg` }
               placeholder="Usuario" />
-              {error?.username && <p className='text-center text-danger mx-1 mt-1' >{error.username}</p>}
+              {errors?.username && <p className='text-center text-danger mx-1 mt-1' >{errors.username}</p>}
           </div>
 
           
-          <div className="form-outline mb-3">
-            <input type="password" name='password' required className={error?.password ?`form-control form-control-lg border border-danger text-danger`:`form-control form-control-lg` }
+          <div className="form-outline input-group mb-3">
+            <input type={showPW? 'text' : 'password'} name='password' onChange={handlerPassChange}  required className={errors?.password ?`form-control form-control-lg border border-danger text-danger`:`form-control form-control-lg` }
               placeholder="Contrasena" />
-              {error?.password && <p className='text-center text-danger mx-1 mt-1' >{error.password}</p>}
+              <i className="fas fa-eye" onClick={handlerShowPW}  style={{'marginLeft': "-40px",'paddingRight':"20px", 'cursor': "pointer",'zIndex':'100','marginTop':'auto',"marginBottom":'auto'}}></i>
           </div>
+          {errors?.password && <span><p className='text-center text-danger mx-1' >{errors.password}</p></span>}
 
           <div className="d-flex justify-content-between align-items-center">
             
@@ -78,9 +125,10 @@ export default function Login() {
           </div>
 
           <div className="text-center text-lg-start mt-4 pt-2">
-            <button type="submit" className="btn btn-primary btn-lg"
-              >Iniciar</button>
-            <p className="small fw-bold mt-2 pt-1 mb-0">No tienes una Cuenta ? crear una cuenta <Link to={"/"}
+            <button type="submit" className="btn btn-primary btn-lg" disabled={loading} >
+            {loading ? <><span className="spinner-grow spinner-grow-sm me-2"></span><span>Iniciando</span></>  : <><i className="fas fa-key me-2"></i>Iniciar</> }
+            </button>
+            <p className="small fw-bold mt-2 pt-1 mb-0">No tienes una Cuenta ? crear una cuenta <Link to={"/register"}
                 className="link-danger">Registar</Link></p>
           </div>
 
