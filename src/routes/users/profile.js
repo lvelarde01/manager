@@ -1,36 +1,47 @@
-import React,{useContext} from 'react';
-import { Outlet, NavLink,Link,  useLoaderData,useActionData, Form,redirect,useNavigation,useSubmit} from "react-router-dom";
-import ThemeContext from '../../context/theme-context';
+import React,{useContext, useState} from 'react';
+import {useLoaderData,useNavigate, Form} from "react-router-dom";
+import AuthContext from '../../context/auth-context';
 import {getinfoUser,updateinfoUser} from '../../requests/users';
 import AlertMessage from '../../assets/alertmessage';
+import ImageProfile from './imageprofile';
 export async function loader({ request }) {
     const dataUserObj = await getinfoUser();
     return {...dataUserObj};
   }
   
 export async function action({ request, params }) {
-  let formData = await request.formData();
-  const updates = Object.fromEntries(formData);
-  const result = await updateinfoUser(updates);
-  console.log("ACTION DATA");
-    console.log(result);
-    return result;
   }
 
 
 
 export default function Profile() {
-  const {theme,handlerTheme} = useContext(ThemeContext);
+  const {Auth} = useContext(AuthContext);
+  const [loading,setLoading] = useState(false);
+  const [fetchReady,setFetchReady] = useState({ready:false,msgtype:'success',message:'default'});
 
   const dataUserObj = useLoaderData();
-  const resultAction = useActionData();
-  console.log("Profile");
-  console.log(dataUserObj);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) =>{
+    event.preventDefault();
+    setLoading(true);
+    setFetchReady({ready:false,msgtype:'success',message:'default'});
+    const formData = new FormData(event.currentTarget);
+    const updates = Object.fromEntries(formData);
+    const result = await updateinfoUser(updates);
+    if(result.acknowledged){
+      setTimeout(()=>{
+        setFetchReady({ready:true,msgtype:'success',message:'default'});
+        setLoading(false);
+      },3000);
+    }
+  }
+
 
   return (
-    <div className={`row justify-content-center ${theme}`}>
-        <AlertMessage Elementshow={resultAction?.acknowledged || false} />
-    <Form className='col-11 mt-3' method='post' >
+    <div className={`row justify-content-center ${Auth.theme}-style`}>
+        {fetchReady.ready && (<AlertMessage message={fetchReady.message} msgtype={fetchReady.msgtype} />) }
+    <Form className='col-9 mt-3' method='post' onSubmit={handleSubmit} >
       <fieldset>
       <div className="mb-3">
         <h2>PERFIL DE USUARIO</h2>
@@ -64,12 +75,17 @@ export default function Profile() {
           <input type="email" name='email' className="form-control " defaultValue={dataUserObj?.email} placeholder="Correo Electronico"/>
         </div>
         <div className="mb-3">
-          <button type="submit" className="btn btn-primary">Actualizar</button>
-          <button type="button" className="btn btn-primary float-end">Cancelar</button>
+          
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? <><span className="spinner-grow spinner-grow-sm me-2"></span><span>Actualizando</span></>  : <><i className="fas fa-floppy-disk me-2"></i>Guardar</> }
+          </button>
+          <button type="button" onClick={()=>{navigate('/')}} className="btn btn-primary float-end"><i className='fas fa-arrow-rotate-left me-2'></i>Regresar</button>
 
         </div>
       </fieldset>
     </Form>
+    <ImageProfile FetchReady={setFetchReady} />
+
     </div>
   )
 }
