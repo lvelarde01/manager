@@ -23,6 +23,19 @@
     margin-top: 0.125rem;
     margin-left: 1.25rem;
     text-decoration: none;
+    width: 90%;
+}
+
+.btn-toggle-nav a:hover::after,
+.btn-toggle-nav .active::after{
+  content: '\f138';
+  position:absolute;
+  left:230px;
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  margin:0px 0px 0px 10px;
+  text-decoration:none;
 }
 .form-style{
   border-radius: 6px;
@@ -174,6 +187,16 @@ color: red;
   $bg-color2: -webkit-linear-gradient(rgba(30, 135, 37, 0.897), #0f5013bb);
   background: $bg-color;
   min-width: 280px;
+  max-width: 280px;
+  .btn-toggle-nav .active , .btn-toggle-nav a:hover{
+    font-weight: bold;
+    background: $color;
+    border-radius: 3px;
+    border: 0.5px solid $color3;
+    box-shadow: 15px 10px 39px 0px rgba(0,0,0,0.53);
+-webkit-box-shadow: 15px 10px 39px 0px rgba(0,0,0,0.53);
+-moz-box-shadow: 15px 10px 39px 0px rgba(0,0,0,0.53);
+  }
 }
 @mixin navbar-create(
   $color: #03001e,
@@ -302,7 +325,16 @@ color: red;
   }
 }
 
-
+@mixin footer-create(
+  $color: #03001e,
+  $color2: #7303c0,
+  $color3: #ec38bc,
+  $color4: #501b41
+) {
+  $bg-color: linear-gradient(75deg, $color, $color2, $color3, $color4);
+  $bg-color2: -webkit-linear-gradient(rgba(30, 135, 37, 0.897), #0f5013bb);
+  background: $bg-color !important;
+}
 
 .red-style-login{
   @include login-create(#000000, #e74c3c, #000000, #e74c3c);
@@ -323,6 +355,36 @@ color: red;
   @include login-create(#ffe000, #799f0c, #cac531, #f3f9a7);
 }
 
+
+.red-style-footer{
+  @include footer-create(#000000, #e74c3c, #000000, #e74c3c);
+}
+.blue-style-footer {
+  @include footer-create(#000046, #1cb5e0, #000046, #1cb5e0);
+}
+.black-style-footer {
+  @include footer-create(#646463, #1d2020, #1f1e20, #d8dac4);
+}
+.green-style-footer {
+  @include footer-create(#00bf8f, #001510, #00bf8f, #001510);
+}
+.purple-style-footer {
+  @include footer-create(#03001e, #7303c0, #ec38bc, #501b41);
+}
+.yellow-style-login{
+  @include footer-create(#ffe000, #799f0c, #cac531, #f3f9a7);
+}
+
+
+
+
+#profile2 img {
+  width: 12rem;
+  height: 12rem;
+  background: #c8c8c8;
+  margin-right: 2rem !important;
+  object-fit: cover;
+}
 .divider:after,
 .divider:before {
 content: "";
