@@ -11,16 +11,15 @@ import AuthContext from './context/auth-context';
 
 export default function App() {
   const {Auth,handlerAuth} = useContext(AuthContext);
-    const {pathname, token } = useLoaderData();
+    const {pathname, userInfo } = useLoaderData();
     const [sidebarOn,setSidebarOn] = useState('');
     const handlerSidebarOn = ()=>{
       const dataUpdate = sidebarOn ==''? 'collapse':'';
       setSidebarOn(dataUpdate);
     }
-
-    console.log("App Pathname");
-    console.log(token);
-    if(!token){
+    console.log("App");
+    console.log(Auth);
+    if(!Auth.token){
       return(
             <Outlet/>
       );

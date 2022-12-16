@@ -11,13 +11,13 @@ import App,{loader as appLoader} from './App';
 import ErrorPage, {loader as errorLoader} from "./error-page";
 import Home from "./routes/home";
 import Add,{loader as addLoader, action as addAction} from "./routes/users/add";
-import {index as IndexUser} from "./routes/users/index";
+import {Index as IndexUser} from "./routes/users/index";
 import Configui from './routes/users/configui';
-import Login,{action as actionLogin,loader as loaderLogin} from './routes/users/login';
+import Login,{loader as loaderLogin} from './routes/users/login';
 import Logout,{loader as loaderLogout} from './routes/users/logout';
 import Main , {loader as loaderMain} from  './main';
 import Profile,{action as actionProfile,loader as loaderProfile} from './routes/users/profile';
-
+import Register,{action as actionRegister} from './routes/users/register';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -56,7 +56,6 @@ const router = createBrowserRouter([
           },
           {
             path: "/login",
-            action:actionLogin,
             loader:loaderLogin,
             element: <Login />,
           },
@@ -64,6 +63,11 @@ const router = createBrowserRouter([
             path: "/logout",
             loader:loaderLogout,
             element: <Logout />,
+          },
+          {
+            path: "/register",
+            loader: actionRegister,
+            element: <Register />,
           },
           {
             path: "*",
