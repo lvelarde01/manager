@@ -37,7 +37,7 @@ export default function Menu2({sidebar}) {
 
 
     return (
-    <div className={`flex-shrink-0 p-3  ${theme}-sidebar ${sidebar}`}>
+    <div className={`flex-shrink-0 p-3  ${Auth.theme}-style-sidebar ${sidebar}`}>
     <Link to="/" className="d-flex align-items-center pb-3 mb-3 text-decoration-none border-bottom">
       <span className="fs-5 fw-semibold text-white mx-auto ">MENU</span>
     </Link>
