@@ -1,7 +1,8 @@
 import React, { useContext, useEffect,useState,submitForm } from 'react'
 import {Link,Form,redirect,useActionData,useNavigate} from 'react-router-dom';
 import { getlogin,validateLogin,checkLogin } from '../../requests/users';
-import AuthContext from "../../context/auth-context"
+import AuthContext from "../../context/auth-context";
+import FooterCustom from '../../assets/FooterCustom';
 
 export async function loader({ request}) {
 
@@ -136,30 +137,7 @@ export default function Login() {
       </div>
     </div>
   </div>
-  <footer
-    id='footer'
-    className="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5">
-    
-    <div className="text-white mb-3 mb-md-0">
-      Copyright © 2022. Todos los derechos reservado.
-    </div>
-
-    <div>
-      <Link to={"/"} className="text-white me-4 rounded-circle">
-        <i className="fab fa-facebook-f"></i>
-      </Link>
-      <Link to={"/"} className="text-white me-4 rounded-circle">
-        <i className="fab fa-twitter"></i>
-      </Link>
-      <Link to={"/"} className="text-white me-4 rounded-circle">
-        <i className="fab fa-google"></i>
-      </Link>
-      <Link to={"/"} className="text-white rounded-circle">
-        <i className="fab fa-linkedin-in"></i>
-      </Link>
-    </div>
-
-  </footer>
+<FooterCustom />
 </div>
 
   )
