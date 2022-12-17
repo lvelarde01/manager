@@ -1,6 +1,5 @@
 import localforage from "localforage";
-const URLREMOTE = 'https://manager-backend.lvelarde01.repl.co';
-const URLDEV = 'http://127.0.0.1:3000';
+const URLAPI = process.env.REACT_APP_URLAPI;
 export const schema = {
   username:{
               rules:[
@@ -157,7 +156,7 @@ export const startUp = async ({data,schema})=>{
 }
 export async function checkIsUnique({field,value,infoUser=false}){
   const query = {[field]:value};
-  const dataResponse = await fetch(`${URLDEV}/api/users/checkisunique`, {
+  const dataResponse = await fetch(`${URLAPI}/api/users/checkisunique`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -173,7 +172,7 @@ return dataResponse;
 export async function getlogin({username,password}){
     const dataUpdate = {username,password};
 
-    const dataResponse = await fetch(`${URLDEV}/api/users/login`, {
+    const dataResponse = await fetch(`${URLAPI}/api/users/login`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -191,7 +190,7 @@ export async function getlogin({username,password}){
     return dataResponse;
 }
 export async function newUser(dataUserObj){
-    const dataResponse = await fetch(`${URLDEV}/api/users/add`, {
+    const dataResponse = await fetch(`${URLAPI}/api/users/add`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -206,7 +205,7 @@ export async function getinfoUser(){
     const {id,token} =  await localforage.getItem('user');
     const dataUpdate = {_id:id,token};
 
-    const dataResponse = await fetch(`${URLDEV}/api/users/info`, {
+    const dataResponse = await fetch(`${URLAPI}/api/users/info`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -220,7 +219,7 @@ export async function updateinfoUser(dataUserObj){
     const {id,token} =  await localforage.getItem('user');
     const dataUpdate = {query:{_id:id,token},data:{...dataUserObj}};
 
-    const dataResponse = await fetch(`${URLDEV}/api/users/updateinfo`, {
+    const dataResponse = await fetch(`${URLAPI}/api/users/updateinfo`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
