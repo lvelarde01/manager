@@ -1,5 +1,35 @@
 import localforage from "localforage";
 const URLAPI = process.env.REACT_APP_URLAPI;
+export const schema_login = {
+  username:{
+              rules:[
+                      {
+                        name:'onlyNumberAndLetter',
+                        message:'Solo permitido letras y numeros.'
+                      },
+                      {
+                        name:'minMaxLength',
+                        message:'Minimo de caracteres 5 y maximo 10.',
+                        minLength:5,
+                        maxLength:10,
+                      },
+                    ]
+            },
+  password:{
+              rules:[
+                      {
+                        name:'onlyNumberAndLetterSimbols',
+                        message:'Numero y letras. Simbolos permitidos [@,.,-,_,#]'
+                      },
+                      {
+                        name:'minMaxLength',
+                        message:'Minimo de caracteres 5 y maximo 10.',
+                        minLength:5,
+                        maxLength:10,
+                      },
+                    ]
+            },
+}
 export const schema = {
   username:{
               rules:[
