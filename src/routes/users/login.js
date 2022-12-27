@@ -1,6 +1,7 @@
-import React, { useContext, useEffect,useState,submitForm } from 'react'
-import {Link,Form,redirect,useActionData,useNavigate} from 'react-router-dom';
-import { getlogin,validateLogin,checkLogin } from '../../requests/users';
+import React, { useContext,useState} from 'react'
+import {Link,Form,useNavigate} from 'react-router-dom';
+import { getlogin,startUp,schema_login } from '../../requests/users';
+import AlertMessage from '../../assets/alertmessage';
 import AuthContext from "../../context/auth-context";
 import FooterCustom from '../../assets/FooterCustom';
 
@@ -9,13 +10,10 @@ export async function loader({ request}) {
 }
 
 export default function Login() {
-  let error = useActionData();
   const {Auth,handlerAuth} = useContext(AuthContext);
   const navigate = useNavigate();
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors,setErrors] = useState(null);
+  const [fetchReady,setFetchReady] = useState({ready:false,msgtype:'success',message:'default'});
+  const [errors,setErrors] = useState({});
   const [loading,setLoading] = useState(false);
   const [showPW,setShowPW] = useState(false);
 
@@ -23,63 +21,56 @@ export default function Login() {
     setShowPW(!showPW);
   }
   
-  const handlerUserChange = (event) =>{
-    setUsername(event.target.value);
-  }
-  const handlerPassChange = (event) =>{
-    setPassword(event.target.value);
-  }
-  useEffect(()=>{
-    if(!error){
-      setErrors(null);
+  const handlerOnchange = (event)=>{
+    const nameField = event.target.name; 
+    const {[nameField]:cpNameField,...cpErrors} = {...errors};
+    if(cpNameField){ 
+      setErrors({...cpErrors});
     }
-    if(handleCheckSubmit()){
-      setIsDisabled(false);
-    }else{
-      setIsDisabled(true);
-    }
-    
-  },[username,password]);
-
-  const handleCheckSubmit = ()=>{
-    return (username.length > 5 && password.length > 5);
   }
-  async function handleSubmit(event){
+  const handlerOnSubmit = async (event)=>{
     event.preventDefault();
     setLoading(true);
-    if (!handleCheckSubmit()) {
-      setTimeout(() => {
-        setLoading(false);
-      }, 3000);
-      return;
+    setFetchReady({ready:false,msgtype:'success',message:'default'});
+    const formData = new FormData(event.currentTarget);
+    const data = Object.fromEntries(formData);
+    const {error,dataUserObj} = await startUp({data,schema:schema_login});
+    if(Object.entries(error).length > 0){
+        setTimeout(()=>{
+          setFetchReady({ready:true,msgtype:'danger',message:''});
+          setErrors({...error});
+          setLoading(false);
+        },3000);
+        return;
     }
-    const result =  await getlogin({username,password});
+    console.log("NO ERRORS");
+    const result =  await getlogin({...dataUserObj});
     if(!result.validate){
-     
       setTimeout(() => {
         setLoading(false);
+        setFetchReady({ready:true,msgtype:'danger',message:''});
         setErrors(result);
       }, 3000);
       return ;
-  }
-  const query = await handlerAuth(result);
-    setIsDisabled(true);
-    navigate('/');
+    }
 
-    // actual submit logic...
-  };
+    await handlerAuth(result);
+    navigate('/');
+  }
   
 
   return (
     <div className={`vw-100 ${Auth.theme || "green" }-style-login`}>
   <div className="container-fluid h-custom ">
+
     <div className="row d-flex justify-content-center align-items-center h-100">
       <div className="col-md-9 col-lg-6 col-xl-5">
         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-          className="img-fluid" alt-text="Sample image"/>
+          className="img-fluid" alt='Imagen Ilustrativa'/>
       </div>
       <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <Form method='post' onSubmit={handleSubmit}>
+        {fetchReady.ready && (<AlertMessage sizeClass={"col-12"} message={fetchReady.message} msgtype={fetchReady.msgtype} />) }
+        <Form method='post' onSubmit={handlerOnSubmit}>
           <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
             <p className="lead fw-normal mb-0 me-3">Acceder con </p>
             <button type="button" className="btn btn-primary btn-floating rounded-circle mx-1">
@@ -101,14 +92,14 @@ export default function Login() {
 
           
           <div className="form-outline mb-4">
-            <input type="text" name='username' onChange={handlerUserChange}     required className={errors?.username ?`form-control form-control-lg border border-danger text-danger`:`form-control form-control-lg` }
+            <input type="text" name='username' onChange={handlerOnchange}     required className={errors?.username ?`form-control form-control-lg border border-danger text-danger`:`form-control form-control-lg` }
               placeholder="Usuario" />
               {errors?.username && <p className='text-center text-danger mx-1 mt-1' >{errors.username}</p>}
           </div>
 
           
           <div className="form-outline input-group mb-3">
-            <input type={showPW? 'text' : 'password'} name='password' onChange={handlerPassChange}  required className={errors?.password ?`form-control form-control-lg border border-danger text-danger`:`form-control form-control-lg` }
+            <input type={showPW? 'text' : 'password'} name='password' onChange={handlerOnchange}  required className={errors?.password ?`form-control form-control-lg border border-danger text-danger`:`form-control form-control-lg` }
               placeholder="Contrasena" />
               <i className="fas fa-eye" onClick={handlerShowPW}  style={{'marginLeft': "-40px",'paddingRight':"20px", 'cursor': "pointer",'zIndex':'100','marginTop':'auto',"marginBottom":'auto'}}></i>
           </div>
