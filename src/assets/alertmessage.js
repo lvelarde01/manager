@@ -27,7 +27,7 @@ export default function AlertMessage({message='', msgtype='success',sizeClass=''
   
   return (
     <div className={`alert alert-${msgtype} alert-dismissible  ${sizeClass || defaultConfig?.[msgtype]?.sizeClass}  ${!show? 'collapse' : '' } `}>
-            <i className={classIcon || defaultConfig?.[msgtype]?.classIcon }></i>{defaultConfig?.[msgtype]?.message}
+            <i className={classIcon || defaultConfig?.[msgtype]?.classIcon }></i>{message || defaultConfig?.[msgtype]?.message}
             <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   )
