@@ -28,11 +28,9 @@ export const themes = {
             title:"Tema Morado"
         },
     };
-const IninitialTheme = "green-style";
-
+const IninitialTheme = (process.env.REACT_APP_THEME || "green");
 const ThemeProvider = ({children}) =>{
     const [theme,setTheme] = useState(IninitialTheme);
-    console.log();
 
     const handlerTheme = (e)=>{
         const valueInput =  e.target.value;
