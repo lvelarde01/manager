@@ -66,7 +66,7 @@ export default function ImageProfile({FetchReady}) {
           },3000);
   }
     return (
-        <Form className='col-2 mt-3' id='profile' method='post' >
+        <Form className='col-3 mt-3' id='profile' method='post' >
         <div className="mb-3">
             <h2>&nbsp;</h2>
           </div>

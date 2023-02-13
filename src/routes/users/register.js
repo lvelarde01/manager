@@ -1,6 +1,7 @@
 import React, { useContext,useState } from 'react'
 import {Form,Link,useNavigate} from 'react-router-dom';
 import AuthContext from '../../context/auth-context';
+import ThemeContext from '../../context/theme-context';
 import {newUser,listRex,startUp,schema} from '../../requests/users';
 import AlertMessage from '../../assets/alertmessage';
 import FooterCustom from '../../assets/FooterCustom';
@@ -11,6 +12,8 @@ export async function action({request}){
 export default function Register() {
   const navigate = useNavigate();
   const {Auth,handlerAuth} = useContext(AuthContext);
+  const {theme,handlerTheme} = useContext(ThemeContext);
+
   const [loading,setLoading] = useState(false);
   const [fetchReady,setFetchReady] = useState({ready:false,msgtype:'success',message:'default'});
   const [errors,setErrors] = useState({});
@@ -56,7 +59,7 @@ export default function Register() {
     <div className='container-fluid'>
     <NavbarCustom />
     
-    <div className={`row  justify-content-center ${Auth.theme || 'green'}-style mt-5   `} style={{ "maxHeight":"640px",
+    <div className={`row  justify-content-center ${Auth.theme || theme}-style mt-5   `} style={{ "maxHeight":"640px",
   "overflowY": "scroll"}} >
     <div className='col-5 mt-4'>
       <img src='./img/form2.png' className='img-fluid rounded mx-auto '/>

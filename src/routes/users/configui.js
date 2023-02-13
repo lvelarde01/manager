@@ -46,7 +46,7 @@ export default function Configui() {
   return (
     <div className={`row justify-content-center ${Auth.theme}-style`}>
        {fetchReady && (<AlertMessage Elementshow={true} />) }
-    <Form className='col-11 mt-3' method='post' onSubmit={handleSubmit} >
+    <Form className='col-11 mt-3 p-4 block-radius-style' method='post' onSubmit={handleSubmit} >
       <fieldset>
       <div className="mb-3">
         <h2>CONFIGURACION</h2>

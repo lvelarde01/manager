@@ -17,8 +17,7 @@ export default function App() {
       const dataUpdate = sidebarOn ==''? 'collapse':'';
       setSidebarOn(dataUpdate);
     }
-    console.log("App");
-    console.log(Auth);
+
     if(!Auth.token){
       return(
             <Outlet/>
@@ -29,7 +28,7 @@ export default function App() {
     return (
       <>
           <Menu2 sidebar={sidebarOn} /> 
-          <div className='container-fluid'>
+          <div className='container-fluid background-default'>
             <div className='row'>
             <Menubar2 sidebarON={handlerSidebarOn} />
             <Outlet/>

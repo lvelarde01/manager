@@ -1,15 +1,18 @@
 import React,{useContext} from 'react'
 import {Link} from 'react-router-dom';
 import AuthContext from '../context/auth-context'
+import ThemeContext from '../context/theme-context';
 
 export default function FooterCustom() {
     const {Auth,handlerAuth} = useContext(AuthContext);
+    const {theme,handlerTheme} = useContext(ThemeContext);
+
   return (
     <footer
-    className={`fixed-bottom ${Auth.theme || 'green'}-style-footer d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5`}>
+    className={`fixed-bottom ${Auth.theme || theme}-style-footer d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5`}>
     
     <div className="text-white mb-3 mb-md-0">
-      Copyright © 2022. Todos los derechos reservado.
+      Copyright © 2023. Todos los derechos reservado.
     </div>
 
     <div>

@@ -7,15 +7,9 @@ const {theme,handlerTheme} = useContext(ThemeContext);
 const {Auth,handlerAuth} = useContext(AuthContext);
 
   return (
-    <div>
-      <h1>INDEX PRINCIPAL{theme} OTHER {Auth.token}</h1>
-      <select className='form-select' onChange={handlerTheme}>
-        <option value={"blue"}>Azul</option>
-        <option value={"black"}>Azul</option>
-        <option value={"green"}>Azul</option>
+    <div className='background-default'>
+      <h1>HOME</h1>
 
-      </select>
-      <button onClick={handlerTheme}>Click Change Name</button>
     </div>
   )
 }
