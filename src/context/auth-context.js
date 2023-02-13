@@ -10,8 +10,6 @@ const AuthProvider = ({children}) =>{
     useEffect(() => {
         if(Auth.token !==null) return;
         checkLogin().then((data)=>{
-            console.log("then Context");
-            console.log(data);
             setAuth(data);
         });
       }, [Auth]);
