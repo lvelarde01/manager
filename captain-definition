@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "dockerfileLines": [
     "FROM node:16.18.1",
     "RUN mkdir -p /src/app",
