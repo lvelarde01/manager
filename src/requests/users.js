@@ -1,5 +1,5 @@
 import localforage from "localforage";
-const URLAPI = process.env.REACT_APP_URLAPI || process.env.REACT_APP_URLAPI_REMOTE;
+const URLAPI = process.env.REACT_APP_URLAPI_REMOTE || process.env.REACT_APP_URLAPI || '/';
 export const schema_password = {
   password:{
     rules:[
