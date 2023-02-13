@@ -375,7 +375,59 @@ color: red;
   @include footer-create(#ffe000, #799f0c, #cac531, #f3f9a7);
 }
 
+.alert-success.new {
+  background: none;
+  border: none;
+  border-left: 4px solid green;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, .2);
+}
+.alert-danger.new {
+  background: none;
+  border: none;
+  border-left: 4px solid rgb(128, 0, 0);
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, .2);
+}
+.alert-warning.new {
+  background: none;
+  border: none;
+  border-left: 4px solid rgb(209, 141, 16);
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, .2);
+}
+.alert-info.new {
+  background: none;
+  border: none;
+  border-left: 4px solid rgb(12, 97, 167);
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, .2);
+}
+.alert button.close {
+  float: right;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0.45rem 1rem;
+  opacity: 0.75;
+  
 
+  &:hover {
+    opacity: 1;
+  }
+}
+.background-default{
+  background:rgb(237, 237, 237);
+}
+.block-radius-style{
+  background:rgb(255,255,255);
+  border-radius:10px;
+  border:2px solid #dbdbdb;
+}
 
 
 #profile2 img {
