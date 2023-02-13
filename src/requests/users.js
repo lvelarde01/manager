@@ -1,5 +1,62 @@
 import localforage from "localforage";
-const URLAPI = process.env.REACT_APP_URLAPI;
+const URLAPI = process.env.REACT_APP_URLAPI || process.env.REACT_APP_URLAPI_REMOTE;
+export const schema_password = {
+  password:{
+    rules:[
+            {
+              name:'onlyNumberAndLetterSimbols',
+              message:'Numero y letras. Simbolos permitidos [@,.,-,_,#]'
+            },
+            {
+              name:'compareField',
+              matchField:'repeatpassword',
+              message:'No Coincide la contrasena.'
+            },
+            {
+              name:'minMaxLength',
+              message:'Minimo de caracteres 5 y maximo 10.',
+              minLength:5,
+              maxLength:10,
+            },
+          ]
+  },
+repeatpassword:{  
+    rules:[
+            {
+              name:'onlyNumberAndLetterSimbols',
+              message:'Numero y letras. Simbolos permitidos [@,.,-,_,#]'
+            },
+            {
+              name:'compareField',
+              matchField:'password',
+              message:'No Coincide la contrasena.'
+            },
+            {
+              name:'minMaxLength',
+              message:'Minimo de caracteres 5 y maximo 10.',
+              minLength:5,
+              maxLength:10,
+            },
+          ],
+          ignoreFieldForsave:true,
+      },
+}
+export const schema_recovery = {
+  email:{  
+      rules:[
+              {
+                name:'email',
+                message:'ingrese un correo electronico valido'
+              },
+              {
+                name:'minMaxLength',
+                message:'Minimo de caracteres 5 y maximo 50.',
+                minLength:5,
+                maxLength:50,
+              },
+            ]
+  },
+}
 export const schema_login = {
   username:{
               rules:[
@@ -199,6 +256,27 @@ export async function checkIsUnique({field,value,infoUser=false}){
 return dataResponse;
 
 }
+export async function getloginAuthGoogle({client_id,credential}){
+  const dataUpdate = {client_id,credential};
+
+  const dataResponse = await fetch(`${URLAPI}/api/users/logingoogle`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataUpdate)
+  }).then(response =>response.json()).then((data)=>{
+    const dataSendObj = {...data};
+    if(dataSendObj.errors !== undefined){
+        return {validate:false,...dataSendObj.errors};
+    }
+    setLocal(dataSendObj);
+    return {validate:true,...dataSendObj};
+  });
+return dataResponse;
+
+} 
 export async function getlogin({username,password}){
     const dataUpdate = {username,password};
 
@@ -218,6 +296,39 @@ export async function getlogin({username,password}){
         return {validate:true,...dataSendObj};
       });
     return dataResponse;
+}
+export async function checkTokenPassword(dataUserObj){
+  const dataResponse = await fetch(`${URLAPI}/api/users/checktoken`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataUserObj)
+  }).then(response =>response.json());
+return dataResponse;
+}
+export async function newPassword(dataUserObj){
+  const dataResponse = await fetch(`${URLAPI}/api/users/newpassword`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataUserObj)
+  }).then(response =>response.json());
+return dataResponse;
+}
+export async function recoveryPassword(dataUserObj){
+  const dataResponse = await fetch(`${URLAPI}/api/users/recoverypassword`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataUserObj)
+  }).then(response =>response.json());
+return dataResponse;
 }
 export async function newUser(dataUserObj){
     const dataResponse = await fetch(`${URLAPI}/api/users/add`, {
