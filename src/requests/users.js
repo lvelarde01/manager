@@ -1,5 +1,8 @@
 import localforage from "localforage";
-const URLAPI = process.env.REACT_APP_URLAPI_REMOTE || process.env.REACT_APP_URLAPI || '/';
+const checkDev = window._env_.REACT_APP_DEV || process.env.REACT_APP_DEV || false; 
+const REMOTE_URL = window._env_.REACT_APP_URLAPI_REMOTE || process.env.REACT_APP_URLAPI_REMOTE || '/';
+const LOCAL_URL = window._env_.REACT_APP_URLAPI || process.env.REACT_APP_URLAPI || '/';
+const URLAPI = (checkDev === true ? LOCAL_URL : REMOTE_URL );
 export const schema_password = {
   password:{
     rules:[

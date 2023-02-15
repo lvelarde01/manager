@@ -28,7 +28,9 @@ export const themes = {
             title:"Tema Morado"
         },
     };
-const IninitialTheme = (process.env.REACT_APP_THEME || "green");
+const THEME_DEFAULT = window._env_.REACT_APP_THEME || process.env.REACT_APP_THEME || 'green';
+
+const IninitialTheme = (THEME_DEFAULT);
 const ThemeProvider = ({children}) =>{
     const [theme,setTheme] = useState(IninitialTheme);
 

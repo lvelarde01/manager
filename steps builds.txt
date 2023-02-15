@@ -1,0 +1,8 @@
+# Build Remoto #
+sudo docker build --no-cache --target build --target expose  -t lvelarde/manager:1.0 .
+sudo docker run -d  -e  REACT_APP_THEME=red -e REACT_APP_DEV=false  -p 80:80 lvelarde/manager:1.0
+
+# Build Localmente #
+npm run build
+sudo docker build --no-cache --target testing  -t lvelarde/manager:1.0 .
+sudo docker run -d  -e  REACT_APP_THEME=red -e REACT_APP_DEV=false  -p 80:80 lvelarde/manager:1.0

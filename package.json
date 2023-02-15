@@ -18,8 +18,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "chmod +x ./env.sh && ./env.sh && mv env-config.js ./public/env-config.js && react-scripts start",
+    "build": "chmod +x ./env.sh && ./env.sh && mv env-config.js ./public/env-config.js && cp ./.env ./public/  && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "compress": "tar -cvf ./deploy.tar --exclude='*.map' ./captain-definition ./build/*"
