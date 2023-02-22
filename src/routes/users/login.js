@@ -95,7 +95,7 @@ export default function Login() {
   
     <div className="row d-flex justify-content-center align-items-center h-100">
       <div className="col-md-9 col-lg-6 col-xl-5">
-        <img src={'/img/delivery3.png'} className="img-fluid" alt='Imagen Ilustrativa'/>
+        <img src={'/img/delivery.png'} className="img-fluid" alt='Imagen Ilustrativa' style={{borderRadius:'5px'}}/>
       </div>
       <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1 block-radius-style p-5">
         {fetchReady.ready && (<AlertMessage sizeClass={"col-12"} message={fetchReady.message} msgtype={fetchReady.msgtype} typeAlert={"custom"} />) }
@@ -139,9 +139,6 @@ export default function Login() {
             <button type="submit" className="btn btn-primary btn-lg" disabled={loading} >
             {loading ? <><span className="spinner-grow spinner-grow-sm me-2"></span><span>Iniciando</span></>  : <><i className="fas fa-key me-2"></i>Iniciar</> }
             </button>
-             <Link to={"/register"}
-                className=" btn btn-primary btn-lg float-end"><i className="fas fa-user me-2"></i>Registar</Link>
-                
           </div>
           
         </Form>
