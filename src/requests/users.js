@@ -2,7 +2,23 @@ import localforage from "localforage";
 const checkDev = window._env_.REACT_APP_DEV || process.env.REACT_APP_DEV || false; 
 const REMOTE_URL = window._env_.REACT_APP_URLAPI_REMOTE || process.env.REACT_APP_URLAPI_REMOTE || '/';
 const LOCAL_URL = window._env_.REACT_APP_URLAPI || process.env.REACT_APP_URLAPI || '/';
-const URLAPI = (checkDev === true ? LOCAL_URL : REMOTE_URL );
+export const URLAPI = (checkDev === 'true' ? LOCAL_URL : REMOTE_URL );
+export const schema_warehouse = {
+  name:{
+    rules:[
+            {
+              name:'onlyNumberAndLetterSimbolsSpaces',
+              message:'Numero y letras. Simbolos permitidos [@,.,-,_,#]'
+            },
+            {
+              name:'minMaxLength',
+              message:'Minimo de caracteres 3 y maximo 10.',
+              minLength:3,
+              maxLength:20,
+            },
+          ]
+  },
+}
 export const schema_password = {
   password:{
     rules:[
@@ -345,6 +361,81 @@ export async function newUser(dataUserObj){
     return dataResponse;
 
 }
+export async function newWarehouse(dataWarehouseObj){
+  const dataResponse = await fetch(`${URLAPI}/api/warehouse/add`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataWarehouseObj)
+    }).then(response =>response.json());
+  return dataResponse;
+
+}
+export async function getAllWarehouse(dataWarehouseObj){
+  const dataResponse = await fetch(`${URLAPI}/api/warehouse/list`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataWarehouseObj)
+    }).then(response =>response.json());
+  return dataResponse;
+
+}
+export async function GetinfoWarehouse(dataWarehouseObj){
+  const dataResponse = await fetch(`${URLAPI}/api/warehouse/getinfo`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataWarehouseObj)
+    }).then(response =>response.json());
+  return dataResponse;
+
+}
+export async function UpdateinfoWarehouse(dataWarehouseObj){
+  const dataResponse = await fetch(`${URLAPI}/api/warehouse/edit`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataWarehouseObj)
+    }).then(response =>response.json());
+  return dataResponse;
+
+}
+
+
+export async function TrashWarehouse(dataWarehouseObj){
+  const dataResponse = await fetch(`${URLAPI}/api/warehouse/trash`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataWarehouseObj)
+    }).then(response =>response.json());
+  return dataResponse;
+
+}
+export async function TrashAllWarehouse(dataWarehouseObj){
+  const dataResponse = await fetch(`${URLAPI}/api/warehouse/trashall`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataWarehouseObj)
+    }).then(response =>response.json());
+  return dataResponse;
+
+}
+
 export async function getinfoUser(){
     const {id,token} =  await localforage.getItem('user');
     const dataUpdate = {_id:id,token};

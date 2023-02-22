@@ -2,6 +2,8 @@ import React from 'react'
 import App from "./App"
 import {AuthProvider} from './context/auth-context'
 import { ThemeProvider } from './context/theme-context'
+import { MessageProvider } from './context/message-context'
+
 import { checkLogin } from './requests/users'
 import { redirect } from 'react-router-dom'
 export async function loader({ request , params }){
@@ -22,11 +24,13 @@ export async function loader({ request , params }){
 } 
 export default function Main() {
   return (
+    <MessageProvider>
     <ThemeProvider>
         <AuthProvider>
             <App />
         </AuthProvider>
-    </ThemeProvider>        
+    </ThemeProvider>
+    </MessageProvider>        
 
   )
 }
