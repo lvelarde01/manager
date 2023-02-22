@@ -10,8 +10,8 @@ export default function NavbarCustom() {
     <div className={`fixed-top navbar navbar-expand-lg ${Auth.theme || theme}-style-navbar`}>
         <div className="container-md">
             <Link className="navbar-brand" to={'/'}>
-    <img src="/logo32.png" width="30" height="30" className="d-inline-block align-top" alt=""/>
-    Mr Delivery
+    <img src="/img/logo.png" width="30" height="30" className="d-inline-block align-top me-2"  alt=""/>
+    Etools Document
   </Link>
         </div>
     </div>
