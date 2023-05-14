@@ -8,13 +8,17 @@ import "./App.scss"
 import Menubar2 from './assets/menubar2';
 import {checkLogin} from './requests/users';
 import AuthContext from './context/auth-context';
+import Spingloading from './assets/spingloading';
+
 
 export default function App() {
   const {Auth,handlerAuth} = useContext(AuthContext);
     const {pathname, userInfo } = useLoaderData();
     const [sidebarOn,setSidebarOn] = useState('');
+    const navigation = useNavigation();
+    
     const handlerSidebarOn = ()=>{
-      const dataUpdate = sidebarOn ==''? 'collapse':'';
+      const dataUpdate = sidebarOn ===''? 'collapse':'';
       setSidebarOn(dataUpdate);
     }
 
@@ -31,7 +35,8 @@ export default function App() {
           <div className='container-fluid background-default'>
             <div className='row'>
             <Menubar2 sidebarON={handlerSidebarOn} />
-            <Outlet/>
+            {navigation.state === "loading"?<><Spingloading /></>:<><Outlet/></>}
+            
             </div>
           </div>
       </>
