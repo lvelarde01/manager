@@ -1,0 +1,115 @@
+-- modulo container --
+- Estimado del tiempo promedio: TOTAL DE PIEZAS DEL CONTAINER 1640*45(seg)/3600(seg) = 20.5(Horas) / 7(personas) = 2.92(horas totales)
+-  Total de horas Unload / 2.92 = el resultado se le resta (1) y se multiplica por (100) 
+- Arreglar insertar Guion en el registro y edicion (Ready)
+- Colocar los titulos en mayusculas y la busqueda (Ready)
+- arreglar fecha (Ready)
+- Seleccionar minutos en el formulario de registro y edicion (ready)
+- Busqueda por fechas (ready)
+- Reparar Boton de eliminar (Ready)
+- Agregar boton de exportar a Excel (data seleccionada o del resultado de la busqueda)
+- Cambiar QC Time a Verify & Email (ready)
+- edicion no actualizada (ready)
+- Agregar PPL/PREPLANING (ready)
+- No REPETIR EL CONTAINER NI EL REGISTRO NI EDICION (ready)
+- VERIFICAR FECHA EN EL CONTAINER  (ready)
+- QUITAR BUILDING EN EL REGISTRO (ready)
+- PONER TODO EN MAYUSCULA TITULOS Y DATA (ready)
+- PONER DE HORAS (HOURS) (ready)
+- arreglar calculo de horas de UNL TIME y QC TIME (ready)
+- TIME PREPLANING in title (ready)
+- quitar el horas de counted de time (ready)
+- Motrar todos los parametros
+- Sacar Promedios y redondear (titulo AVERAGE)
+- numero de LIVE Y DROP (READY)
+- cambiar los place holder a ingles y mayuscula en los registros (ready)
+- Vertical Align todos los campos (ready)
+- Eliminar "CONTAINER->VPS"
+- MALA HORA STALING PLALLET  min 60 debe avanzar (ready)
+- FECHA DA UN DIA MAS   (ready)
+- Cambiar nombre  UNL TIME -> UNLOAD & SORTED TIME (READY)
+- CREAR TIEMPO HORA MIN VERIFY & EMAIL TIME (READY)
+- COLOCAR LOS / a LOS PPL (READY)
+- STAGIN PALLET TIME (READY)
+- MOVER EL RESUMEN DE CONTAINER DE PRIMERO (READY)
+- cambiar name container NUMBER CONTAINER (READY)
+- Problemas de las horas cuando marca UNDEFINED  (READY)
+- Vertical Align todos los campos (ready)
+- container filtro de busqueda agregar campo para limpiar las opcione
+- Agregar limitador de fecha desde el FROM al TO
+- colocar legende en el formulario de separacion (ready)
+- colocar ordenamiento por fecha (ready)
+- buscar warehouse y collection
+- Agregar tabla fija (FIX THEAD)
+- el editar tiene problema en los campos (Ready)
+- corregir el forklit por stagin pallet (ready)
+- hacer tabla nueva pestana multiplicar tabla horas por promedio (ready) 
+- buscar por collection IMPORTANTE
+- agregar de time number to time reporte (ready)
+- arreglar fecha (ready)
+- Not Aplicabled para los pads o pillow
+- boton de registro rapido de container 
+- NOT ARRIVE OR NOT SCAN -> Es cuando esta en el genesis y no esta en scaner
+- ADICIONAL -> Aplica cuando lo escaneado es mayor que lo esperado
+- EXTRA O ERROR DE SCANER-> Cuando esta en el scane y no en el (genesis)
+- FALTANTE -> Aplica cuando no esta escaneada y no llego. 
+- AGREGAR NUMBRE DE SCAN -> de cada hoja de excel.
+- CARGAR FOTO DE DESCARGA (QC) (CI) -> por Container
+- Fix palabra de resumen de table QTY PEOPLE -> QTY PEOPLE (AVERAGE) Ready
+- Registro estandar de trajadores 8AM - 5PM
+
+- NUEVO MODULO
+- REGISTRAR DEPARTAMENTO
+- RELACIONARLO CON EL WORKER
+- FECHA Y HORA (INICIO) (FIN)
+- CONTAR HORAS LABORADAS
+
+-- WORKER--
+- arreglar el eliminar (numero) (ready)
+- validar isunique verificar "Worker Registrado" (ready)
+- camabiar el worker por name (ready)
+- Seleccion multiple en el filter
+
+-- DEPARTMEN --
+- minino de name al registrar 2 a 50 (ready)
+- verificar el boton eliminar (ready)
+- verificar mensaje de Isunique (ready)
+- eliminar funcion de unica de cada row (ready)
+
+-- ASIST CONTROL --
+- colocar boton de limpiar fitro (ready)
+- Verificar eliminar data (ready)
+- verificar que deje registrar varias horas
+- colocar calculadora de tiempo flotante
+- eliminar funcion de unica de cada row (ready)
+- colocar tabla stripe color (ready)
+- ordenar por fecha y hora (ready)
+- hora meridiano 12 no am ni pm (ready)
+- register get date current (ready)
+
+-- coleccion --
+- registro y edicion permitir minimo 3 a 50 caracteres, tambien simbolos. (Ready)
+- nombre del campo que diga NAME COLLECTION (ready)
+- validation name "COLLECTION REGISTRADA" (ready) (VERIFY)
+- colocar barra index (ready)
+- colocar los campos en mayusculas (ready)
+- validar el campo sea unico (ready)
+- cambiar los place holder a ingles y mayuscula en los registros (ready)
+- ordenamiento por nombre (ready)
+- index cambiar el label diga collection (ready)
+
+-- VPS --
+- CAMBIAR NOMBRE DE SELECT VPS a SELECT CONTAINER (READY)
+- Validar los nombre en la edicion del vps (ready)
+- cambiar los place holder a ingles y mayuscula en los registros (ready)
+- colocar barra index (ready)
+- Vertical Align todos los campos
+- COMPLETAR EL PARAMETRO VPS-xxxxx (ready)
+- Corregir el eliminar (ready)
+- limpiar campos al guardar (ready)
+- colocar fecha de container (ready)
+- buscar por minuscula y mayuscula (ready)
+
+- NIVELES DE USUARIOS
+- USUARIO CONSULTAR
+- RECUPERAR CLAVE NO CULMINA BIEN
