@@ -3,22 +3,6 @@ const checkDev = window._env_.REACT_APP_DEV || process.env.REACT_APP_DEV || fals
 const REMOTE_URL = window._env_.REACT_APP_URLAPI_REMOTE || process.env.REACT_APP_URLAPI_REMOTE || '/';
 const LOCAL_URL = window._env_.REACT_APP_URLAPI || process.env.REACT_APP_URLAPI || '/';
 export const URLAPI = (checkDev === 'true' ? LOCAL_URL : REMOTE_URL );
-export const schema_warehouse = {
-  name:{
-    rules:[
-            {
-              name:'onlyNumberAndLetterSimbolsSpaces',
-              message:'Numero y letras. Simbolos permitidos [@,.,-,_,#]'
-            },
-            {
-              name:'minMaxLength',
-              message:'Minimo de caracteres 3 y maximo 10.',
-              minLength:3,
-              maxLength:20,
-            },
-          ]
-  },
-}
 export const schema_password = {
   password:{
     rules:[
@@ -211,7 +195,7 @@ export const schema = {
                     ]
         },
 }
-export const listRex = async ({field,rule,value,matchField,matchFieldvalue,minLength=0,maxLength=0})=>{
+export const listRex = async ({field,rule,value,matchField,matchFieldvalue,minLength=0,maxLength=0,urlQuery})=>{
  let Regex = null;
  let checkSpecial = false;
  let result = false;
@@ -221,13 +205,13 @@ export const listRex = async ({field,rule,value,matchField,matchFieldvalue,minLe
   case 'onlyNumber': Regex = /^[0-9]*$/;break;
   case 'onlyLetters': Regex = /^[a-zA-Z]*$/;break;
   case 'onlyLettersSpaces': Regex = /^[a-zA-Z\s]*$/;break;
-  case 'onlyNumberAndLetterSimbolsSpaces': Regex = /^[a-zA-Z0-9\_.-@*#\s]*$/;break;
+  case 'onlyNumberAndLetterSimbolsSpaces': Regex = /^[a-zA-Z0-9!@#\$%\^\&*\)\(\s+=._-]*$/;break;
   case 'email': Regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;break;
-  case 'isUnique': checkSpecial=true;  Regex = await checkIsUnique({field,value}); result=!!Regex.isunique; break;
+  case 'isUnique': checkSpecial=true;  Regex = await checkIsUnique({field,value,urlQuery}); result=!!Regex.isunique; break;
   case 'compareField': checkSpecial=true;  result = value === matchFieldvalue ? true : false; break;
   case 'minLength': checkSpecial=true; result = value.length >= minLength ? true : false;  break;
   case 'maxLength': checkSpecial=true; result = value.length <= maxLength ? true : false;  break;
-  case 'minMaxLength': checkSpecial=true; result = value.length >= minLength && value.length <= maxLength  ? true : false;  break;
+  case 'minMaxLength': checkSpecial=true; result = value?.length >= minLength && value?.length <= maxLength  ? true : false;  break;
 
 
  }
@@ -238,19 +222,136 @@ if(checkSpecial){
  return regex_test.test(value);
 }
 }
-export const startUp = async ({data,schema})=>{
+export const getCountContainer = (dataRow)=>{
+
+  return dataRow.reduce((acc,current)=>{
+    let PCSCurrent = 0;
+    let countDROPCurrent = current.typeunload === 'DROP'? 1 : 0; 
+    let countLIVECurrent = current.typeunload === 'LIVE UNLOAD'? 1 : 0; 
+    const VpsCurrent = (acc.VPS || 0) + (current.vps.length || 0);
+    
+    countDROPCurrent = countDROPCurrent + Number(acc.countDROP || 0);
+    countLIVECurrent = countLIVECurrent + Number(acc.countLIVE || 0);
+
+    current.vps.forEach(element => {
+      PCSCurrent = PCSCurrent + Number(element.pcs);
+    });
+    PCSCurrent = PCSCurrent + (acc.PCS || 0);
+    
+    return {
+      PCS:PCSCurrent,
+      VPS:VpsCurrent,
+      countDROP: countDROPCurrent,
+      countLIVE:countLIVECurrent
+    }
+  },{});
+}
+export const getPPL = (dataRow,ppl_field)=>{
+  return dataRow.reduce((acc,current)=>{
+  return (Number(current[ppl_field]) || 0) + (acc || 0);
+  },0);
+}
+export const getTimeCount = (dataRow,filedHour,FieldMin)=>{
+
+  const count = dataRow.reduce((acc,current)=>{
+  let hourCurrent = Number(current[filedHour]) + (acc.countH || 0);
+  let minCurrent = Number(current[FieldMin]) + (acc.countM || 0);
+    return {  
+      countH:hourCurrent,
+      countM:minCurrent
+    };
+    },{});
+
+  while (count.countM >= 60) {
+    count.countM=count.countM - 60;
+    count.countH=count.countH + 1;
+  }
+  return {...count};
+}
+export const formatNumber = (num, decimals) => num.toLocaleString('en-US', {
+  minimumFractionDigits: 2,      
+  maximumFractionDigits: 2,
+});
+export const hourList = ({label,value})=>{
+  const Hour = {};
+  for (let index = 0; index <= 23; index++) {
+    Hour[`${String(index).padStart(2,'0')}${value}`] = `${String(index).padStart(2,'0')}${label}`;
+ }
+return Hour;
+}
+export const minList = ({label='',value=''})=>{
+  const Min = {};
+  for (let index = 0; index <= 60; index++) {
+    Min[`${String(index).padStart(2,'0')}${value}`]=`${String(index).padStart(2,'0')}${label}`;
+ }
+return Min;
+}
+export const FixHours = (hour,minute,onlyHour = false)=>{
+  let fix_hour = Number(hour) >= 13 ? Number(hour) -12 : hour;
+   fix_hour = Number(hour) === 0 ? Number(hour) + 12 : fix_hour;
+  let meridiano = Number(hour) >= 13  && Number(hour) <= 23 ? 'PM': 'AM';
+  meridiano = Number(hour) === 12 ? 'M' : meridiano;
+  if(onlyHour){
+    return `${fix_hour} ${meridiano}`;
+  }
+  return ` ${String(fix_hour || 0).padStart(2,'0')}:${String(minute || 0).padStart(2,'0')} ${meridiano}`
+}
+export const FixTime = (hour,minute)=>{
+  return `${String(hour || 0).padStart(2,'0') || 0 }:${ String(minute || 0).padStart(2,'0') || 0 }` 
+}
+export const PPLAverage = (PPL,AllRows)=>{
+  return Math.round(Number(PPL) / Number(AllRows)) || 0 ;
+}
+export const TimeToNumber = (hour,min)=>{
+  return ((min / 60) + hour) || 0;
+}
+export const resumeTimeAverage = (hour,min,PPL,AllRows,FixNumber=true)=>{
+  if(!FixNumber) return (TimeToNumber(hour,min) * PPLAverage(PPL,AllRows)) || 0 ;  
+  return formatNumber((TimeToNumber(hour,min) * PPLAverage(PPL,AllRows))) || 0 ;  
+}
+export const CountHours = (hourStart,minStart,hourFinish,minFinish,ObjResult=false)=>{
+  let countMins=0;
+  let countHours=0;
+  let currentTimeInit = hourStart;
+  if(hourFinish<hourStart){
+    return 'hora incorrecta';
+  }
+  while (hourFinish>currentTimeInit) {
+    countHours=countHours+1;
+    currentTimeInit++;
+  }
+  if(minStart>minFinish){
+    countMins=minFinish-minStart;   
+  }else if(minStart<minFinish){
+    countMins=minFinish-minStart;   
+  }
+  if(countMins<0){
+    countMins=60+countMins;
+    countHours=countHours > 0 ? countHours-1: 0;  
+  }
+  if(ObjResult){
+    return {countH:countHours,countM:countMins};
+  }
+  return `${String(countHours || 0).padStart(2,'0')}:${String(countMins || 0).padStart(2,'0')}`;
+}
+export const startUp = async ({data,schema,ignoreRules={}})=>{
   let error={};
   const dataUserObj = {};
     for (const value of Object.entries(schema)) {
       for (const valueChildlren of value[1].rules) {
         const keyName=value[0];
-        const ruleName = valueChildlren.name; 
-        const valueField = data[value[0]];
+        const ruleName = valueChildlren.name;
+        const valueField = typeof data[value[0]] === 'string'? data[value[0]].trim() : data[value[0]] ;
         const matchField = valueChildlren.matchField || undefined;
         const matchFieldvalue = data[matchField] || undefined;
         const minLength = valueChildlren.minLength || undefined;
         const maxLength = valueChildlren.maxLength || undefined;
-        const result = await listRex({field:keyName,rule:ruleName,value:valueField,matchField,matchFieldvalue,minLength,maxLength});
+        const urlQuery = valueChildlren.urlQuery || undefined;
+        console.log(urlQuery); 
+
+        let result = ignoreRules?.[keyName]?.rules?.some((valueScope)=>{
+          return valueScope?.[ruleName] || false;
+        }) || await listRex({field:keyName,rule:ruleName,value:valueField,matchField,matchFieldvalue,minLength,maxLength,urlQuery});
         if(!result){
           error[keyName]=valueChildlren.message;
         }else if(!valueChildlren.ignoreFieldForsave){
@@ -260,9 +361,9 @@ export const startUp = async ({data,schema})=>{
   }
   return {error,dataUserObj};
 }
-export async function checkIsUnique({field,value,infoUser=false}){
+export async function checkIsUnique({field,value,infoUser=false,urlQuery='/api/users/checkisunique'}){
   const query = {[field]:value};
-  const dataResponse = await fetch(`${URLAPI}/api/users/checkisunique`, {
+  const dataResponse = await fetch(`${URLAPI}${urlQuery}`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
