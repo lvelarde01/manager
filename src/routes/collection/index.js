@@ -19,6 +19,7 @@ export function Index() {
   const [loading,setLoading] = useState(false);
   const [dataRow,setDataRow] = useState([]);
   const [deleteAll,setDeleteAll] = useState({});
+  const [deleting,setDeleting] = useState(false);
   const [fetchReady,setFetchReady] = useState({ready:false,msgtype:'success',message:'default'});
   const [searchParam] = useState(["name"]);
   const [q, setQ] = useState("");
@@ -47,9 +48,11 @@ export function Index() {
       setDatarowFilter([]);
       return;
     }
+    let query = value.toLocaleLowerCase() || null;
+
     let dataFilter = dataRow.filter((data)=>{
-      if(data.name.toLocaleLowerCase().includes(value) ||
-      data.name.toLocaleLowerCase().includes(value)){
+      if(data.name.toLocaleLowerCase().includes(query) ||
+      data.name.toLocaleLowerCase().includes(query)){
         return data
       }
     });
@@ -68,16 +71,21 @@ export function Index() {
     if(!window.confirm('Desea Eliminar todos los Registros seleccionados ?')){
       return;
     }
+    setDeleting(true);
     const result = await ActionFetch(deleteAll,'/api/collection/trashall');
     if(result.acknowledged){
       setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'success',message:'Se Elimino correctamente.'});
         const dataRowFilter = dataRow.length > 1 ? dataRow.filter((data)=>deleteAll.hasOwnProperty(data._id)=== false) : [];
         setDataRow(dataRowFilter);
+        setDeleting(false);
+        setDeleteAll({});
+
       },3000);
     }else{
       setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'danger',message:'Se presento un problema, Por favor, verifique e intente de nuevo.'});
+        setDeleting(false);
       },3000);
     }
     
@@ -96,7 +104,8 @@ export function Index() {
   }
   const handlerCheckAll = async(event)=>{
     if(event.currentTarget.checked){
-       let dataRowCopy = [...dataRow];
+      const dataRowShow = q.length > 0 ? dataRowFilter : dataRow;
+       let dataRowCopy = [...dataRowShow];
       let result = dataRowCopy.reduce((key,index,array)=>{
         return {...key,[index._id]:'_id'}
       },{});
@@ -138,6 +147,15 @@ export function Index() {
     
   }
   const dataRowShow = q.length >0 ? dataRowFilter : dataRow;
+  dataRowShow.sort(function (a, b) {
+    if (a.name > b.name) {
+      return 1;
+    }
+    if (a.name < b.name) {
+      return -1;
+    }
+    return 0;
+  });
   return (
     <div className={`row justify-content-center ${Auth.theme}-style`} >
         {Message.ready && (<AlertMessage sizeClass={"col-12 ms-3 mt-3"} message={Message.message} msgtype={Message.msgtype} typeAlert={"custom"} />) }
@@ -150,16 +168,19 @@ export function Index() {
       
       <div className='col-4 mb-3 mt-3 '>
         <button className='btn btn-primary'><i className='fas fa-search me-2'></i>Buscar</button>
-        <button className={`btn btn-primary ${Object.keys(deleteAll).length === 0 ? 'disabled':''} ` } onClick={handlerDeleteAll} ><i className='fas fa-trash me-2'></i>Eliminar</button>
-
+        <button className={`btn btn-primary ${Object.keys(deleteAll).length === 0 || deleting ? 'disabled':''} ` } onClick={handlerDeleteAll} >
+        {deleting ? <><span className="spinner-grow spinner-grow-sm me-2"></span><span>Eliminando..</span></>  : <><i className='fas fa-trash me-2'></i>Eliminar ( {Object.keys(deleteAll).length} )</> }
+          </button>
       </div>
       <h2>Resultado de la busqueda</h2>
-      <table className="table table-hover">
+      <div className='table-responsive' style={{overflowY:'scroll',height:'500px'}} >
+      <table className="table table-hover" >
           <thead>
             <tr>
-              <th scope="col"><input disabled={dataRow.length ===0?true:false} type={'checkbox'} name={"field"} value={'as'} checked={Object.keys(deleteAll).length === dataRow.length &&  dataRow.length > 0 ? true : false} onChange={handlerCheckAll} title={'Seleccionar todos'}/></th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Fecha de Registro</th>
+              <th scope="col"><input disabled={dataRowShow.length ===0?true:false} type={'checkbox'} name={"field"} value={'as'} checked={Object.keys(deleteAll).length === dataRowShow.length &&  dataRow.length > 0 ? true : false} onChange={handlerCheckAll} title={'Seleccionar todos'}/></th>
+              <th scope="col">COLLECTION</th>
+              <th scope="col">CODE RUG ID</th>
+              <th scope="col">DATE REGISTER</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -168,17 +189,16 @@ export function Index() {
                 <tr key={data._id}>
                 <th scope="row"><input type={'checkbox'} checked={deleteAll.hasOwnProperty(data._id) ? true : false} name={"field"} value={data._id} onChange={handlerCheck}/></th>
                 <td>{data.name}</td>
+                <td>{data?.rugid ? data?.rugid : 'NOT RECORD' }</td>
                 <td>{data.utc}</td>
                 <td><Link className={`btn btn-primary ${loading?`disabled`:``}`} onClick={handlerEdit} to={`/collection/edit/${data._id}`}><i className='fas fa-pencil'/></Link>
-                    <Link id={data._id} onClick={handlerTrash}  disabled={loading}  className={`btn btn-primary ${loading?`disabled`:``}`}>
-                          {data.edit ? <><i className="spinner-grow spinner-grow-sm me-2"></i></>  : <><i className="fas fa-trash"></i></> }
-                    </Link>
                 </td>
 
               </tr>
             ))}
           </tbody>
         </table>
+        </div>
         <nav aria-label="Page navigation example">
           <ul className="pagination">
             <li className="page-item"><Link className="page-link btn-primary me-0" href="#">Anterior</Link></li>

@@ -31,7 +31,7 @@ export function Index() {
       async function loadData(){
       const dataReceived_vps =  ActionFetch({},'/api/vps/list');
       const dataReceived_collection =  ActionFetch({ fieldsObj:{_id:true,name:true} },'/api/collection/list');
-      const dataReceived_container =  ActionFetch({ fieldsObj:{_id:true,name:true} },'/api/container/list');
+      const dataReceived_container =  ActionFetch({ fieldsObj:{_id:true,name:true,date_upload:true} },'/api/container/list');
       
       const dataVps = await dataReceived_vps;
       const dataCollection = await dataReceived_collection;
@@ -42,20 +42,24 @@ export function Index() {
         return {...acc,...values};
       },{});
       const dataContainerObj = Object.values(dataContainer).reduce((acc,current)=>{
-        let values = {[current._id]:current.name};
+        let values = {[current._id]:{name:current.name,date_upload:current.date_upload}};
+
         return {...acc,...values};
       },{});
 
       const result = Object.values(dataVps).reduce((acc,current)=>{
-        let {container_id,collection_id,...rest} = current;
+        let {container_id,collection_id,date_upload,...rest} = current;
         //container
-        container_id=dataContainerObj[container_id];
+        let date = new Date(dataContainerObj[container_id].date_upload);
+        date_upload =date.toLocaleDateString('en-gb',{timeZone: "UTC"});
+        container_id=dataContainerObj[container_id].name;
+
         //colection
         collection_id=collection_id.reduce((acc,current) => {
           return [...acc,dataCollectionObj[current._id]];
-        },[]).join();
+        },[]).join(', ');
 
-        return [...acc,{container_id,collection_id,'checked':true,'del':false,...rest}];
+        return [...acc,{container_id,collection_id,date_upload,'checked':true,'del':false,...rest}];
       },[]);
       setDataRow(result);
       setLoadingData(true);
@@ -74,8 +78,10 @@ export function Index() {
       setDatarowFilter([]);
       return;
     }
+    let query = value.toLocaleLowerCase() || null;
+
     let dataFilter = dataRow.filter((data)=>{
-      if(data.name.toLocaleLowerCase().includes(value) || data.container_id.toLocaleLowerCase().includes(value) || data.collection_id.toLocaleLowerCase().includes(value)){
+      if(data.name.toLocaleLowerCase().includes(query) || data.container_id.toLocaleLowerCase().includes(query) || data.collection_id.toLocaleLowerCase().includes(query)){
         return data
       }
     });
@@ -126,7 +132,8 @@ export function Index() {
   }
   const handlerCheckAll = async(event)=>{
     if(event.currentTarget.checked){
-       let dataRowCopy = [...dataRow];
+      const dataRowShow = q.length > 0 ? dataRowFilter : dataRow;
+       let dataRowCopy = [...dataRowShow];
       let result = dataRowCopy.reduce((key,index,array)=>{
         return {...key,[index._id]:'_id'}
       },{});
@@ -179,7 +186,7 @@ export function Index() {
       
       <div className='row ms-3 mt-3 block-radius-style'>
       <div className='col-6 mb-3 mt-3 ms-5'>
-        <input type={'text'} placeholder={'buscar por nombre'} name={'query'} className={'form-control'} value={q} onChange={(e)=>{handlerSearch(e.currentTarget.value);setQ(e.currentTarget.value)}} />
+        <input type={'text'} placeholder={'SEARCH BY VPS OR COLLECTION OR CONTAINER'} name={'query'} className={'form-control'} value={q} onChange={(e)=>{handlerSearch(e.currentTarget.value);setQ(e.currentTarget.value)}} />
       </div>
       
       <div className='col-4 mb-3 mt-3 '>
@@ -190,16 +197,18 @@ export function Index() {
           </button>
 
       </div>
-      <h2>Resultado de la busqueda</h2>
+      <h2>RESULT SEARCH</h2>
+      <div className='table-responsive' style={{overflowY:'scroll',height:'500px'}}>
       <table className="table table-hover">
           <thead>
             <tr>
-              <th scope="col"><input disabled={dataRow.length ===0?true:false} type={'checkbox'} name={"field"} value={'as'} checked={Object.keys(deleteAll).length === dataRow.length &&  dataRow.length > 0 ? true : false} onChange={handlerCheckAll} title={'Seleccionar todos'}/></th>
+              <th scope="col"><input disabled={dataRowShow.length ===0?true:false} type={'checkbox'} name={"field"} checked={Object.keys(deleteAll).length === dataRowShow.length &&  dataRow.length > 0 ? true : false} onChange={handlerCheckAll} title={'Seleccionar todos'}/></th>
               <th scope="col">VPS#</th>
               <th scope="col">PCS</th>
-              <th scope="col">Colleciones</th>
-              <th scope="col">Container</th>
-              <th scope="col">Fecha de Registro</th>
+              <th scope="col">COLLECTIONS</th>
+              <th scope="col">CONTAINER</th>
+              <th scope="col">DATE CONTAINER</th>
+              <th scope="col">DATE REGISTER</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -207,16 +216,13 @@ export function Index() {
             {dataRowShow&&dataRowShow.map((data)=>(
                 <tr key={data._id}>
                 <th scope="row"><input type={'checkbox'} checked={deleteAll.hasOwnProperty(data._id) ? true : false} name={"field"} value={data._id} onChange={handlerCheck}/></th>
-                <td>{data.name}</td>
+                <td className='text-nowrap'>{data.name}</td>
                 <td>{data.pcs}</td>
-                <td>{data.collection_id}</td>
-                <td>{data.container_id}</td>
-
+                <td >{data.collection_id}</td>
+                <td className='text-nowrap'>{data.container_id}</td>
+                <td >{data.date_upload}</td>
                 <td>{data.utc}</td>
                 <td><Link className={`btn btn-primary ${loading?`disabled`:``}`} onClick={handlerEdit} to={`/vps/edit/${data._id}`}><i className='fas fa-pencil'/></Link>
-                    <Link id={data._id} onClick={handlerTrash}  disabled={loading}  className={`btn btn-primary ${loading?`disabled`:``}`}>
-                          {data.edit ? <><i className="spinner-grow spinner-grow-sm me-2"></i></>  : <><i className="fas fa-trash"></i></> }
-                    </Link>
                 </td>
 
               </tr>
@@ -238,6 +244,7 @@ export function Index() {
             </tr>
           </tfoot>
         </table>
+        </div>
         <nav aria-label="Page navigation example">
           <ul className="pagination">
             <li className="page-item"><Link className="page-link btn-primary me-0" href="#">Anterior</Link></li>

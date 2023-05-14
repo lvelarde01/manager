@@ -1,4 +1,4 @@
-import React,{useContext,useEffect,useState} from 'react'
+import React,{useContext,useEffect,useState,useRef} from 'react'
 import {useLoaderData,useNavigate, Form,redirect} from "react-router-dom";
 import AuthContext from '../../context/auth-context';
 import {startUp} from '../../requests/users';
@@ -25,7 +25,7 @@ export function Add() {
   const [allCollection,setAllCollection] = useState([]);
   const [loadDataContainer,setLoadDataContainer] = useState(false);
   const [loadDataCollection,setLoadDataCollection] = useState(false);
-
+  const selectContainer = useRef();
   const dataUserObj = useLoaderData();
   const navigate = useNavigate();
 
@@ -63,7 +63,11 @@ export function Add() {
 
 
   const handlerOnchange = (event)=>{
-    const nameField = event.target.name; 
+    const nameField = event.currentTarget.name;
+    if(event.currentTarget.type==='text'){
+      let value =event.currentTarget.value;
+      event.currentTarget.value=value.toUpperCase();
+    }
     const {[nameField]:cpNameField,...cpErrors} = {...errors};
     if(cpNameField){ 
       setErrors({...cpErrors});
@@ -80,6 +84,7 @@ export function Add() {
       const value = {_id:current.value};
       return [...acc,value]
     },[]);
+    data['collection_id'] = dataCollection || [];
     const {error,dataUserObj} = await startUp({data,schema:schema_vps});
     if(Object.entries(error).length > 0){
         setTimeout(()=>{
@@ -90,12 +95,17 @@ export function Add() {
         return;
     }
     console.log("NO ERRORS");
-    const result = await ActionFetch({...dataUserObj,'collection_id':dataCollection},'/api/vps/add');
+    dataUserObj['name']=`VPS-${dataUserObj['name']}`;
+    const result = await ActionFetch({...dataUserObj},'/api/vps/add');
     if(result.acknowledged){
       setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'success',message:'Se guardo correctamente.'});
         setLoading(false);
+        selectContainer.current.value = "";
         event.target.name.value = '';
+        event.target.pcs.value = '';
+        setSelected([]);
+
       },3000);
     }else{
       setTimeout(()=>{
@@ -119,10 +129,10 @@ export function Add() {
       <div className="mb-3">
         <h2>REGISTRO DE VPS</h2>
       </div>
-        <legend>Informacion</legend>
+        <legend>INFORMACION</legend>
         <div className="mb-3">
-        <select className="form-select" name='container_id' required onChange={handlerOnchange} >
-          <option value={null}>Seleccione Container</option>
+        <select className="form-select" name='container_id' ref={selectContainer} required onChange={handlerOnchange} >
+          <option value={""}>SELECT CONTAINER</option>
           {allContainers.map((value)=>(
             <option key={value._id} value={value._id}>{value.name}</option>
           ))}
@@ -130,7 +140,7 @@ export function Add() {
           {errors?.container_id && <p className='text-center text-danger mx-1 mt-1' >*{errors.container_id}*</p>}
         </div>
         <div className="mb-3">
-          <input type="text" name='name' className="form-control" required placeholder="VPS-#" onChange={handlerOnchange}/>
+          <input type="number" min={1} name='name' className="form-control" required placeholder="VPS-#" onChange={handlerOnchange}/>
           {errors?.name && <p className='text-center text-danger mx-1 mt-1' >*{errors.name}*</p>}
         </div>
         <div className="mb-3">
@@ -145,6 +155,8 @@ export function Add() {
             labelledBy="Select"
             className={'form-control'}
           />
+          {errors?.collection_id && <p className='text-center text-danger mx-1 mt-1' >*{errors.collection_id}*</p>}
+
         </div>
         <div className="mb-3">
         <button type="submit" className="btn btn-primary" disabled={loading}>

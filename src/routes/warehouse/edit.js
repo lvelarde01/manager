@@ -1,12 +1,14 @@
 import React,{useContext,useState} from 'react'
 import {useLoaderData,useNavigate, Form,redirect} from "react-router-dom";
 import AuthContext from '../../context/auth-context';
-import {GetinfoWarehouse,UpdateinfoWarehouse,startUp,schema_warehouse} from '../../requests/users';
+import {startUp} from '../../requests/users';
 import AlertMessage from '../../assets/alertmessage';
+import { schema_warehouse } from '../../requests/rules';
+import { ActionFetch } from '../../requests/container';
 
 
 export async function loader( {params} ) {
-    let result = await GetinfoWarehouse({_id:params.id});
+    let result = await ActionFetch({_id:params.id},'/api/warehouse/getinfo');
     console.log(result)
     return result;
     }
@@ -23,7 +25,11 @@ export function Edit() {
     const navigate = useNavigate();
 
     const handlerOnchange = (event)=>{
-    const nameField = event.target.name; 
+    const nameField = event.target.name;
+    if(event.currentTarget.type==='text'){
+        let value =event.currentTarget.value;
+        event.currentTarget.value=value.toUpperCase();
+      }  
     const {[nameField]:cpNameField,...cpErrors} = {...errors};
     if(cpNameField){ 
         setErrors({...cpErrors});
@@ -37,7 +43,7 @@ export function Edit() {
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData);
     
-    const {error,dataUserObj} = await startUp({data,schema:schema_warehouse});
+    const {error,dataUserObj} = await startUp({data,schema:schema_warehouse,ignoreRules:{name:{rules:[{'isUnique':true}]}}});
     if(Object.entries(error).length > 0){
         setTimeout(()=>{
             setFetchReady({ready:true,msgtype:'danger',message:''});
@@ -47,7 +53,7 @@ export function Edit() {
         return;
     }
     console.log("NO ERRORS");
-    const result = await UpdateinfoWarehouse({...dataUserObj,_id:dataInfo._id});
+    const result = await ActionFetch({...dataUserObj,_id:dataInfo._id},'/api/warehouse/edit');
     if(result.acknowledged){
         setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'success',message:'Se guardo correctamente.'});
@@ -78,7 +84,7 @@ export function Edit() {
         </div>
         <legend>Informacion</legend>
         <div className="mb-3">
-            <input type="text" name='name' defaultValue={dataInfo.name} className="form-control" required placeholder="Nombre de WareHouse" onChange={handlerOnchange}/>
+            <input type="text" name='name' defaultValue={dataInfo.name} className="form-control" required placeholder="NAME WAREHOUSE" onChange={handlerOnchange}/>
             {errors?.name && <p className='text-center text-danger mx-1 mt-1' >*{errors.name}*</p>}
         </div>
         <div className="mb-3">

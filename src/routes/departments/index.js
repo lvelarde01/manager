@@ -26,7 +26,7 @@ export function Index() {
   useEffect(()=>{
       if(loadingData)return;
       async function loadData(){
-      const dataReceived = await ActionFetch({},'/api/workers/list');
+      const dataReceived = await ActionFetch({},'/api/departments/list');
       const result = Object.values(dataReceived).map((value)=>{
         return {...value,'checked':true,'del':false};
       });
@@ -69,7 +69,7 @@ export function Index() {
       return;
     }
     setDeleting(true);
-    const result = await ActionFetch(deleteAll,'/api/workers/trashall');
+    const result = await ActionFetch(deleteAll,'/api/departments/trashall');
     if(result.acknowledged){
       setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'success',message:'Se Elimino correctamente.'});
@@ -127,7 +127,7 @@ export function Index() {
       return value;
     });
     setDataRow(dataRowCopy);
-    let result = await ActionFetch({_id},'/api/workers/trash');
+    let result = await ActionFetch({_id},'/api/departments/trash');
     if(result.acknowledged){
       setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'success',message:'Se Elimino correctamente.'});
@@ -144,16 +144,6 @@ export function Index() {
     
   }
   const dataRowShow = q.length >0 ? dataRowFilter : dataRow;
-
-  dataRowShow.sort(function (a, b) {
-    if (a.name.toLocaleLowerCase() > b.name.toLocaleLowerCase()) {
-      return 1;
-    }
-    if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
-      return -1;
-    }
-    return 0;
-  });
   return (
     <div className={`row justify-content-center ${Auth.theme}-style`} >
         {Message.ready && (<AlertMessage sizeClass={"col-12 ms-3 mt-3"} message={Message.message} msgtype={Message.msgtype} typeAlert={"custom"} />) }
@@ -161,7 +151,7 @@ export function Index() {
       
       <div className='row ms-3 mt-3 block-radius-style'>
       <div className='col-6 mb-3 mt-3 ms-5'>
-        <input type={'text'} placeholder={'SEARCH BY NAME OR SURNAME'} name={'query'} className={'form-control'} value={q} onChange={(e)=>{handlerSearch(e.currentTarget.value);setQ(e.currentTarget.value)}} />
+        <input type={'text'} placeholder={'SEARCH BY NAME DEPARTMENT'} name={'query'} className={'form-control'} value={q} onChange={(e)=>{handlerSearch(e.currentTarget.value);setQ(e.currentTarget.value)}} />
       </div>
       
       <div className='col-4 mb-3 mt-3 '>
@@ -169,14 +159,14 @@ export function Index() {
         <button className={`btn btn-primary ${Object.keys(deleteAll).length === 0 || deleting ? 'disabled':''} ` } onClick={handlerDeleteAll} >
         {deleting ? <><span className="spinner-grow spinner-grow-sm me-2"></span><span>Eliminando..</span></>  : <><i className='fas fa-trash me-2'></i>Eliminar ( {Object.keys(deleteAll).length} )</> }
           </button>
+
       </div>
-      <h2>SEARCH RESULT</h2>
-      <div className='table-responsive' style={{overflowY:'scroll',height:'500px'}} >
+      <h2>RESULT SEARCHED</h2>
       <table className="table table-hover">
           <thead>
             <tr>
               <th scope="col"><input disabled={dataRowShow.length ===0?true:false} type={'checkbox'} name={"field"} value={'as'} checked={Object.keys(deleteAll).length === dataRowShow.length &&  dataRowShow.length > 0 ? true : false} onChange={handlerCheckAll} title={'Seleccionar todos'}/></th>
-              <th scope="col">NAME / SURNAME</th>
+              <th scope="col">DEPARTMENT</th>
               <th scope="col">DATE REGISTER</th>
               <th scope="col"></th>
             </tr>
@@ -187,14 +177,13 @@ export function Index() {
                 <th scope="row"><input type={'checkbox'} checked={deleteAll.hasOwnProperty(data._id) ? true : false} name={"field"} value={data._id} onChange={handlerCheck}/></th>
                 <td>{data.name}</td>
                 <td>{data.utc}</td>
-                <td><Link className={`btn btn-primary ${loading?`disabled`:``}`} onClick={handlerEdit} to={`/workers/edit/${data._id}`}><i className='fas fa-pencil'/></Link>
+                <td><Link className={`btn btn-primary ${loading?`disabled`:``}`} onClick={handlerEdit} to={`/departments/edit/${data._id}`}><i className='fas fa-pencil'/></Link>
                 </td>
 
               </tr>
             ))}
           </tbody>
         </table>
-        </div>
         <nav aria-label="Page navigation example">
           <ul className="pagination">
             <li className="page-item"><Link className="page-link btn-primary me-0" href="#">Anterior</Link></li>

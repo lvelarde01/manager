@@ -25,7 +25,11 @@ export function Edit() {
     const navigate = useNavigate();
 
     const handlerOnchange = (event)=>{
-    const nameField = event.target.name; 
+    const nameField = event.target.name;
+    if(event.currentTarget.type==='text'){
+        let value =event.currentTarget.value;
+        event.currentTarget.value=value.toUpperCase();
+      }  
     const {[nameField]:cpNameField,...cpErrors} = {...errors};
     if(cpNameField){ 
         setErrors({...cpErrors});
@@ -39,7 +43,7 @@ export function Edit() {
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData);
     
-    const {error,dataUserObj} = await startUp({data,schema:schema_register});
+    const {error,dataUserObj} = await startUp({data,schema:schema_register,ignoreRules:{name:{rules:[{'isUnique':true}]}}});
     if(Object.entries(error).length > 0){
         setTimeout(()=>{
             setFetchReady({ready:true,msgtype:'danger',message:''});

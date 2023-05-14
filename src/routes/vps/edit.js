@@ -23,9 +23,14 @@ export async function loader( {params} ) {
                 return value;
             }
         });
-        let values = {label:Collection.name,value:current._id};
+        if(Collection?.name){
+        let values = {label:Collection.name || "",value:current._id};
             return [...acc,values];
+          }
+          return [...acc];
       },[]);
+      const nameArray = dataInfo?.name.split('-');  
+      dataInfo.name = Number(nameArray[1]) || 0; 
     const allContainers = Object.values(resultcontainer) || [];
 
     const allCollection = Object.values(FetchCollection).reduce((acc,current)=>{
@@ -50,7 +55,11 @@ export function Edit() {
 
 
     const handlerOnchange = (event)=>{
-    const nameField = event.target.name; 
+    const nameField = event.target.name;
+    if(event.currentTarget.type==='text'){
+      let value =event.currentTarget.value;
+      event.currentTarget.value=value.toUpperCase();
+    }  
     const {[nameField]:cpNameField,...cpErrors} = {...errors};
     if(cpNameField){ 
         setErrors({...cpErrors});
@@ -67,7 +76,8 @@ export function Edit() {
         const value = {_id:current.value};
         return [...acc,value]
       },[]);
-    const {error,dataUserObj} = await startUp({data,schema:schema_vps});
+      data['collection_id'] = dataCollection || [];
+    const {error,dataUserObj} = await startUp({data,schema:schema_vps,ignoreRules:{name:{rules:[{'isUnique':true}]}}});
     if(Object.entries(error).length > 0){
         setTimeout(()=>{
             setFetchReady({ready:true,msgtype:'danger',message:''});
@@ -77,6 +87,7 @@ export function Edit() {
         return;
     }
     console.log("NO ERRORS");
+    dataUserObj['name']=`VPS-${dataUserObj['name']}`;
     const result = await ActionFetch({...dataUserObj,_id:dataInfo._id,'collection_id':dataCollection},'/api/vps/edit');
     if(result.acknowledged){
         setTimeout(()=>{
@@ -105,7 +116,7 @@ export function Edit() {
         <div className="mb-3">
         <h2>MODIFICAR VPS</h2>
         </div>
-        <legend>Informacion</legend>
+        <legend>INFORMACION</legend>
         <div className="mb-3">
         <select className="form-select" name='container_id' defaultValue={dataInfo?.container_id} required onChange={handlerOnchange} >
           {allContainers.map((value)=>(
@@ -115,7 +126,7 @@ export function Edit() {
           {errors?.container_id && <p className='text-center text-danger mx-1 mt-1' >*{errors.container_id}*</p>}
         </div>
         <div className="mb-3">
-          <input type="text" name='name' className="form-control" defaultValue={dataInfo.name} required placeholder="VPS-#" onChange={handlerOnchange}/>
+          <input type="number" min={1} name='name' className="form-control" defaultValue={dataInfo.name} required placeholder="VPS-#" onChange={handlerOnchange}/>
           {errors?.name && <p className='text-center text-danger mx-1 mt-1' >*{errors.name}*</p>}
         </div>
         <div className="mb-3">
@@ -130,6 +141,8 @@ export function Edit() {
             labelledBy="Select"
             className={'form-control'}
           />
+          {errors?.collection_id && <p className='text-center text-danger mx-1 mt-1' >*{errors.collection_id}*</p>}
+
         </div>
         <div className="mb-3">
         <button type="submit" className="btn btn-primary" disabled={loading}>

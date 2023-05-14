@@ -1,8 +1,9 @@
 import React,{useContext,useState} from 'react'
 import {useLoaderData,useNavigate, Form,redirect} from "react-router-dom";
 import AuthContext from '../../context/auth-context';
-import {newWarehouse,startUp,schema_warehouse} from '../../requests/users';
-import {getinfoUser,updateinfoUser} from '../../requests/users';
+import {startUp} from '../../requests/users';
+import {schema_warehouse,} from '../../requests/rules';
+import { ActionFetch } from '../../requests/container';
 import AlertMessage from '../../assets/alertmessage';
 
 
@@ -31,6 +32,10 @@ export function Add() {
 
   const handlerOnchange = (event)=>{
     const nameField = event.target.name; 
+    if(event.currentTarget.type==='text'){
+      let value =event.currentTarget.value;
+      event.currentTarget.value=value.toUpperCase();
+    } 
     const {[nameField]:cpNameField,...cpErrors} = {...errors};
     if(cpNameField){ 
       setErrors({...cpErrors});
@@ -54,7 +59,7 @@ export function Add() {
         return;
     }
     console.log("NO ERRORS");
-    const result = await newWarehouse({...dataUserObj});
+    const result = await ActionFetch({...dataUserObj},'/api/warehouse/add');
     if(result.acknowledged){
       setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'success',message:'Se guardo correctamente.'});
@@ -84,9 +89,9 @@ export function Add() {
       <div className="mb-3">
         <h2>REGISTRO DE WAREHOUSE</h2>
       </div>
-        <legend>Informacion</legend>
+        <legend>INFORMACION</legend>
         <div className="mb-3">
-          <input type="text" name='name' className="form-control" required placeholder="Nombre de WareHouse" onChange={handlerOnchange}/>
+          <input type="text" name='name' className="form-control" required placeholder="NAME WAREHOUSE" onChange={handlerOnchange}/>
           {errors?.name && <p className='text-center text-danger mx-1 mt-1' >*{errors.name}*</p>}
         </div>
         <div className="mb-3">

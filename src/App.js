@@ -30,8 +30,8 @@ export default function App() {
           <Menu2 sidebar={sidebarOn} /> 
           <div className='container-fluid background-default'>
             <div className='row'>
-            <Menubar2 sidebarON={handlerSidebarOn} />
-            <Outlet/>
+                <Menubar2 sidebarON={handlerSidebarOn} />
+                <Outlet/>
             </div>
           </div>
       </>

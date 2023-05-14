@@ -24,6 +24,8 @@ export function Index() {
   const [q, setQ] = useState("");
   const [dataRowFilter,setDatarowFilter] = useState([]);
   const [loadingData,setLoadingData] = useState(false);
+  const [deleting,setDeleting] = useState(false);
+
   useEffect(()=>{
     if(loadingData)return;
       async function loadData(){
@@ -47,9 +49,10 @@ export function Index() {
       setDatarowFilter([]);
       return;
     }
+    let query = value.toLocaleLowerCase() || null;
     let dataFilter = dataRow.filter((data)=>{
-      if(data.name.toLocaleLowerCase().includes(value) ||
-      data.name.toLocaleLowerCase().includes(value)){
+      if(data.name.toLocaleLowerCase().includes(query) ||
+      data.name.toLocaleLowerCase().includes(query)){
         return data
       }
     });
@@ -68,16 +71,20 @@ export function Index() {
     if(!window.confirm('Desea Eliminar todos los Registros seleccionados ?')){
       return;
     }
+    setDeleting(true);
     const result = await TrashAllWarehouse(deleteAll);
     if(result.acknowledged){
       setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'success',message:'Se Elimino correctamente.'});
         const dataRowFilter = dataRow.length > 1 ? dataRow.filter((data)=>deleteAll.hasOwnProperty(data._id)=== false) : [];
         setDataRow(dataRowFilter);
+        setDeleting(false);
+        setDeleteAll({});
       },3000);
     }else{
       setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'danger',message:'Se presento un problema, Por favor, verifique e intente de nuevo.'});
+        setDeleting(false);
       },3000);
     }
     
@@ -96,7 +103,8 @@ export function Index() {
   }
   const handlerCheckAll = async(event)=>{
     if(event.currentTarget.checked){
-       let dataRowCopy = [...dataRow];
+      const dataRowShow = q.length > 0 ? dataRowFilter : dataRow;
+      let dataRowCopy = [...dataRowShow];
       let result = dataRowCopy.reduce((key,index,array)=>{
         return {...key,[index._id]:'_id'}
       },{});
@@ -113,7 +121,8 @@ export function Index() {
     }
     setLoading(true);
     const _id = event.currentTarget.id;
-    let dataRowCopy = [...dataRow];
+    const dataRowShow = q.length > 0 ? dataRowFilter : dataRow;
+    let dataRowCopy = [...dataRowShow];
     dataRowCopy = dataRow.map((value)=>{
       if(value._id === _id){
         value.edit=true;
@@ -150,16 +159,19 @@ export function Index() {
       
       <div className='col-4 mb-3 mt-3 '>
         <button className='btn btn-primary'><i className='fas fa-search me-2'></i>Buscar</button>
-        <button className={`btn btn-primary ${Object.keys(deleteAll).length === 0 ? 'disabled':''} ` } onClick={handlerDeleteAll} ><i className='fas fa-trash me-2'></i>Eliminar</button>
+        <button className={`btn btn-primary ${Object.keys(deleteAll).length === 0 || deleting ? 'disabled':''} ` } onClick={handlerDeleteAll} >
+        {deleting ? <><span className="spinner-grow spinner-grow-sm me-2"></span><span>Eliminando..</span></>  : <><i className='fas fa-trash me-2'></i>Eliminar ( {Object.keys(deleteAll).length} )</> }
+          </button>
 
       </div>
       <h2>Resultado de la busqueda</h2>
+      <div className='table-responsive' style={{overflowY:'scroll',height:'500px'}}>
       <table className="table table-hover">
           <thead>
             <tr>
-              <th scope="col"><input disabled={dataRow.length ===0?true:false} type={'checkbox'} name={"field"} value={'as'} checked={Object.keys(deleteAll).length === dataRow.length &&  dataRow.length > 0 ? true : false} onChange={handlerCheckAll} title={'Seleccionar todos'}/></th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Fecha de Registro</th>
+              <th scope="col"><input disabled={dataRowShow.length ===0?true:false} type={'checkbox'} name={"field"} value={'as'} checked={Object.keys(deleteAll).length === dataRowShow.length &&  dataRowShow.length > 0 ? true : false} onChange={handlerCheckAll} title={'Seleccionar todos'}/></th>
+              <th scope="col">WAREHOUSE</th>
+              <th scope="col">DATE REGISTER</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -179,6 +191,7 @@ export function Index() {
             ))}
           </tbody>
         </table>
+        </div>
         <nav aria-label="Page navigation example">
           <ul className="pagination">
             <li className="page-item"><Link className="page-link btn-primary me-0" href="#">Anterior</Link></li>

@@ -3,7 +3,7 @@ import {useLoaderData,useNavigate, Form,redirect} from "react-router-dom";
 import AuthContext from '../../context/auth-context';
 import {startUp} from '../../requests/users';
 import {ActionFetch} from '../../requests/container';
-import {schema_workers} from '../../requests/rules'
+import {schema_department} from '../../requests/rules'
 import AlertMessage from '../../assets/alertmessage';
 
 
@@ -43,7 +43,7 @@ export function Add() {
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData);
     
-    const {error,dataUserObj} = await startUp({data,schema:schema_workers});
+    const {error,dataUserObj} = await startUp({data,schema:schema_department});
     if(Object.entries(error).length > 0){
         setTimeout(()=>{
           setFetchReady({ready:true,msgtype:'danger',message:''});
@@ -53,7 +53,7 @@ export function Add() {
         return;
     }
     console.log("NO ERRORS");
-    const result = await ActionFetch({...dataUserObj},'/api/workers/add');
+    const result = await ActionFetch({...dataUserObj},'/api/departments/add');
     if(result.acknowledged){
       setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'success',message:'Se guardo correctamente.'});
@@ -80,18 +80,18 @@ export function Add() {
         <Form className='col-12 mt-3' method='post' onSubmit={handlerOnSubmit} >
       <fieldset>
       <div className="mb-3">
-        <h2>REGISTRO DE TRABAJADOR</h2>
+        <h2>REGISTER OF DEPARTMENT</h2>
       </div>
-        <legend>Informacion</legend>
+        <legend>INFORMATION</legend>
         <div className="mb-3">
-          <input type="text" name='name' className="form-control" required placeholder="Nombre y Apellido" onChange={handlerOnchange}/>
+          <input type="text" name='name' className="form-control" required placeholder="NAME DEPARTMENT" onChange={handlerOnchange}/>
           {errors?.name && <p className='text-center text-danger mx-1 mt-1' >*{errors.name}*</p>}
         </div>
         <div className="mb-3">
         <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? <><span className="spinner-grow spinner-grow-sm me-2"></span><span>Guardando..</span></>  : <><i className='fas fa-floppy-disk me-2'></i>Registrar</> }
             </button>
-          <button type="button" className="btn btn-primary float-end" disabled={loading} onClick={()=>{navigate('/workers/')}} ><i className='fas fa-arrow-rotate-left me-2'></i>Cancelar</button>
+          <button type="button" className="btn btn-primary float-end" disabled={loading} onClick={()=>{navigate('/departments/')}} ><i className='fas fa-arrow-rotate-left me-2'></i>Cancelar</button>
 
         </div>
       </fieldset>

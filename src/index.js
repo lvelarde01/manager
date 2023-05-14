@@ -32,6 +32,8 @@ import {Edit as ContainerEdit, loader as loaderContainerEdit} from './routes/con
 import {Add as CollectionRegister, loader as loaderCollection, action as actionCollection} from './routes/collection/add';
 import {Index as CollectionIndex, loader as loaderCollectionIndex} from './routes/collection/index';
 import {Edit as CollectionEdit, loader as loaderCollectionEdit} from './routes/collection/edit'; 
+import {Upload as CollectionUpload, loader as loaderUpload} from './routes/collection/upload'; 
+
 //Workers
 import {Add as WorkersRegister, loader as loaderWorkers, action as actionWorkers} from './routes/workers/add';
 import {Index as WorkersIndex, loader as loaderWorkersIndex} from './routes/workers/index';
@@ -40,6 +42,22 @@ import {Edit as WorkersEdit, loader as loaderWorkersEdit} from './routes/workers
 import {Add as VpsRegister, loader as loaderVps, action as actionVps} from './routes/vps/add';
 import {Index as VpsIndex, loader as loaderVpsIndex} from './routes/vps/index';
 import {Edit as VpsEdit, loader as loaderVpsEdit} from './routes/vps/edit'; 
+//deparments
+import {Add as DepartmentsRegister, loader as loaderDepartments} from './routes/departments/add';
+import {Index as DepartmentsIndex, loader as loaderDepartmentsIndex} from './routes/departments/index';
+import {Edit as DepartmentsEdit, loader as loaderDepartmentsEdit} from './routes/departments/edit'; 
+
+//calendars
+import {Add as CalendarsRegister, loader as loaderCalendars} from './routes/calendars/add';
+import {Index as CalendarsIndex, loader as loaderCalendarsIndex} from './routes/calendars/index';
+import {Edit as CalendarsEdit, loader as loaderCalendarsEdit} from './routes/calendars/edit'; 
+
+//migrator
+import {Add as MigratorRegister, loader as loaderMigrator} from './routes/migrator/add';
+import {Addfixed as MigratorRegisterFixed, loader as loaderMigratorFixed} from './routes/migrator/addfixed';
+import {Index as MigratorIndex, loader as loaderMigratorIndex} from './routes/migrator/index';
+import {Edit as MigratorEdit, loader as loaderMigratorEdit} from './routes/migrator/edit'; 
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -148,6 +166,11 @@ const router = createBrowserRouter([
             loader: loaderCollectionEdit,
             element: <CollectionEdit />,
           },
+          {
+            path: "/collection/upload",
+            loader: loaderUpload,
+            element: <CollectionUpload />,
+          },
           //Workers
           {
             path: "/workers/add",
@@ -179,6 +202,59 @@ const router = createBrowserRouter([
             path: "/vps/edit/:id",
             loader: loaderVpsEdit,
             element: <VpsEdit />,
+          },
+           //deparments
+           {
+            path: "/departments/add",
+            loader: loaderDepartments,
+            element: <DepartmentsRegister />,
+          },
+          {
+            path: "/departments/",
+            loader: loaderDepartmentsIndex,
+            element: <DepartmentsIndex />,
+          },
+          {
+            path: "/departments/edit/:id",
+            loader: loaderDepartmentsEdit,
+            element: <DepartmentsEdit />,
+          },
+          //calendars
+          {
+            path: "/calendars/add",
+            loader: loaderCalendars,
+            element: <CalendarsRegister />,
+          },
+          {
+            path: "/calendars/",
+            loader: loaderCalendarsIndex,
+            element: <CalendarsIndex />,
+          },
+          {
+            path: "/calendars/edit/:id",
+            loader: loaderCalendarsEdit,
+            element: <CalendarsEdit />,
+          },
+          //migrator
+          {
+            path: "/migrator/add",
+            loader: loaderMigrator,
+            element: <MigratorRegister />,
+          },
+          {
+            path: "/migrator/addfixed",
+            loader: loaderMigratorFixed,
+            element: <MigratorRegisterFixed />,
+          },
+          {
+            path: "/migrator/",
+            loader: loaderMigratorIndex,
+            element: <MigratorIndex />,
+          },
+          {
+            path: "/migrator/edit/:id",
+            loader: loaderMigratorEdit,
+            element: <MigratorEdit />,
           },
           {
             path: "*",

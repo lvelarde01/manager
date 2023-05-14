@@ -26,6 +26,10 @@ export function Add() {
 
   const handlerOnchange = (event)=>{
     const nameField = event.target.name; 
+    if(event.currentTarget.type==='text'){
+      let value =event.currentTarget.value;
+      event.currentTarget.value=value.toUpperCase();
+    }  
     const {[nameField]:cpNameField,...cpErrors} = {...errors};
     if(cpNameField){ 
       setErrors({...cpErrors});
@@ -39,7 +43,7 @@ export function Add() {
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData);
     
-    const {error,dataUserObj} = await startUp({data,schema:schema_collection});
+    const {error,dataUserObj} = await startUp({data,schema:schema_collection,ignoreRules:{rugid:{rules:[{'minMaxLength':true}]}}});
     if(Object.entries(error).length > 0){
         setTimeout(()=>{
           setFetchReady({ready:true,msgtype:'danger',message:''});
@@ -78,9 +82,9 @@ export function Add() {
       <div className="mb-3">
         <h2>REGISTRO DE COLECCION</h2>
       </div>
-        <legend>Informacion</legend>
+        <legend>INFORMACION</legend>
         <div className="mb-3">
-          <input type="text" name='name' className="form-control" required placeholder="Nombre de Coleccion" onChange={handlerOnchange}/>
+          <input type="text" name='name' className="form-control" required placeholder="NAME COLLECTION" onChange={handlerOnchange}/>
           {errors?.name && <p className='text-center text-danger mx-1 mt-1' >*{errors.name}*</p>}
         </div>
         <div className="mb-3">

@@ -3,12 +3,12 @@ import {useLoaderData,useNavigate, Form,redirect} from "react-router-dom";
 import AuthContext from '../../context/auth-context';
 import {startUp} from '../../requests/users';
 import { ActionFetch } from '../../requests/container';
-import {schema_collection} from '../../requests/rules';
+import {schema_department} from '../../requests/rules';
 import AlertMessage from '../../assets/alertmessage';
 
 
 export async function loader( {params} ) {
-    let result = await ActionFetch({_id:params.id},'/api/collection/getinfo');
+    let result = await ActionFetch({_id:params.id},'/api/departments/getinfo');
     console.log(result)
     return result;
     }
@@ -43,7 +43,7 @@ export function Edit() {
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData);
     
-    const {error,dataUserObj} = await startUp({data,schema:schema_collection,ignoreRules:{name:{rules:[{'isUnique':true}]}}});
+    const {error,dataUserObj} = await startUp({data,schema:schema_department,ignoreRules:{name:{rules:[{'isUnique':true}]}}});
     if(Object.entries(error).length > 0){
         setTimeout(()=>{
             setFetchReady({ready:true,msgtype:'danger',message:''});
@@ -53,7 +53,7 @@ export function Edit() {
         return;
     }
     console.log("NO ERRORS");
-    const result = await ActionFetch({...dataUserObj,_id:dataInfo._id},'/api/collection/edit');
+    const result = await ActionFetch({...dataUserObj,_id:dataInfo._id},'/api/departments/edit');
     if(result.acknowledged){
         setTimeout(()=>{
         setFetchReady({ready:true,msgtype:'success',message:'Se guardo correctamente.'});
@@ -79,22 +79,18 @@ export function Edit() {
         <Form className='col-12 mt-3' method='post' onSubmit={handlerOnSubmit} >
         <fieldset>
         <div className="mb-3">
-        <h2>MODIFICAR DE COLLECTION</h2>
+        <h2>MODIFICATION DEPARTMENT</h2>
         </div>
-        <legend>INFORMACION</legend>
+        <legend>INFORMATION</legend>
         <div className="mb-3">
-            <input type="text" name='name' defaultValue={dataInfo?.name} className="form-control" required placeholder="NAME COLLECTION" onChange={handlerOnchange}/>
+            <input type="text" name='name' defaultValue={dataInfo.name} className="form-control" required placeholder="NAME DEPARTMENT" onChange={handlerOnchange}/>
             {errors?.name && <p className='text-center text-danger mx-1 mt-1' >*{errors.name}*</p>}
-        </div>
-        <div className="mb-3">
-            <input type="text" name='rugid' defaultValue={dataInfo?.rugid} className="form-control" required placeholder="RUG ID" onChange={handlerOnchange}/>
-            {errors?.rugid && <p className='text-center text-danger mx-1 mt-1' >*{errors.rugid}*</p>}
         </div>
         <div className="mb-3">
         <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? <><span className="spinner-grow spinner-grow-sm me-2"></span><span>Guardando..</span></>  : <><i className='fas fa-floppy-disk me-2'></i>Guardar</> }
             </button>
-            <button type="button" className="btn btn-primary float-end" disabled={loading} onClick={()=>{navigate('/collection/')}} ><i className='fas fa-arrow-rotate-left me-2'></i>Cancelar</button>
+            <button type="button" className="btn btn-primary float-end" disabled={loading} onClick={()=>{navigate('/departments/')}} ><i className='fas fa-arrow-rotate-left me-2'></i>Cancelar</button>
 
         </div>
         </fieldset>
