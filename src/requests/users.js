@@ -2,8 +2,21 @@ import localforage from "localforage";
 const checkDev = window._env_.REACT_APP_DEV || process.env.REACT_APP_DEV || false; 
 const REMOTE_URL = window._env_.REACT_APP_URLAPI_REMOTE || process.env.REACT_APP_URLAPI_REMOTE || '/';
 const LOCAL_URL = window._env_.REACT_APP_URLAPI || process.env.REACT_APP_URLAPI || '/';
-const URLAPI = (checkDev === true ? LOCAL_URL : REMOTE_URL );
+export const URLAPI = (checkDev === 'true' ? LOCAL_URL : REMOTE_URL );
 export const schema_password = {
+  oldpassword:{
+    rules:[
+            {
+              name:'onlyNumberAndLetterSimbols',
+              message:'Numero y letras. Simbolos permitidos [@,.,-,_,#]'
+            },
+            {
+              name:'minLength',
+              message:'Minimo de caracteres 5.',
+              minLength:5,
+            },
+          ]
+  },
   password:{
     rules:[
             {
@@ -16,10 +29,9 @@ export const schema_password = {
               message:'No Coincide la contrasena.'
             },
             {
-              name:'minMaxLength',
-              message:'Minimo de caracteres 5 y maximo 10.',
+              name:'minLength',
+              message:'Minimo de caracteres 5.',
               minLength:5,
-              maxLength:10,
             },
           ]
   },
@@ -35,10 +47,9 @@ repeatpassword:{
               message:'No Coincide la contrasena.'
             },
             {
-              name:'minMaxLength',
-              message:'Minimo de caracteres 5 y maximo 10.',
+              name:'minLength',
+              message:'Minimo de caracteres 5.',
               minLength:5,
-              maxLength:10,
             },
           ],
           ignoreFieldForsave:true,
@@ -68,10 +79,9 @@ export const schema_login = {
                         message:'Solo permitido letras y numeros.'
                       },
                       {
-                        name:'minMaxLength',
+                        name:'minLength',
                         message:'Minimo de caracteres 5 y maximo 10.',
                         minLength:5,
-                        maxLength:10,
                       },
                     ]
             },
@@ -82,10 +92,9 @@ export const schema_login = {
                         message:'Numero y letras. Simbolos permitidos [@,.,-,_,#]'
                       },
                       {
-                        name:'minMaxLength',
+                        name:'minLength',
                         message:'Minimo de caracteres 5 y maximo 10.',
                         minLength:5,
-                        maxLength:10,
                       },
                     ]
             },
@@ -196,54 +205,100 @@ export const schema = {
         },
 }
 export const listRex = async ({field,rule,value,matchField,matchFieldvalue,minLength=0,maxLength=0})=>{
- let Regex = null;
- let checkSpecial = false;
- let result = false;
-  switch (rule) {
-  case 'onlyNumberAndLetter': Regex = /^[a-zA-Z0-9]*$/;break;
-  case 'onlyNumberAndLetterSimbols': Regex = /^[a-zA-Z0-9\_.-@*#]*$/;break;
-  case 'onlyNumber': Regex = /^[0-9]*$/;break;
-  case 'onlyLetters': Regex = /^[a-zA-Z]*$/;break;
-  case 'onlyLettersSpaces': Regex = /^[a-zA-Z\s]*$/;break;
-  case 'onlyNumberAndLetterSimbolsSpaces': Regex = /^[a-zA-Z0-9\_.-@*#\s]*$/;break;
-  case 'email': Regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;break;
-  case 'isUnique': checkSpecial=true;  Regex = await checkIsUnique({field,value}); result=!!Regex.isunique; break;
-  case 'compareField': checkSpecial=true;  result = value === matchFieldvalue ? true : false; break;
-  case 'minLength': checkSpecial=true; result = value.length >= minLength ? true : false;  break;
-  case 'maxLength': checkSpecial=true; result = value.length <= maxLength ? true : false;  break;
-  case 'minMaxLength': checkSpecial=true; result = value.length >= minLength && value.length <= maxLength  ? true : false;  break;
-
-
- }
-if(checkSpecial){
-  return result;
-}else{
- const regex_test = new RegExp(Regex,"g");
- return regex_test.test(value);
+  try {
+    const error = {};
+    let data = null;
+    let Regex = null;
+    let result = false;
+      switch (rule) {
+      case 'onlyNumberAndLetter': Regex = /^[a-zA-Z0-9]*$/;break;
+      case 'onlyNumberAndLetterSimbols': Regex = /^[a-zA-Z0-9\_.-@*#]*$/;break;
+      case 'onlyNumber': Regex = /^[0-9]*$/;break;
+      case 'onlyLetters': Regex = /^[a-zA-Z]*$/;break;
+      case 'onlyLettersSpaces': Regex = /^[a-zA-Z\s]*$/;break;
+      case 'onlyNumberAndLetterSimbolsSpaces': Regex = /^[a-zA-Z0-9\_.-@*#\s]*$/;break;
+      case 'email': Regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;break;
+      case 'isUnique':  data = await checkIsUnique({field,value}); result=!!data.isunique; break;
+      case 'compareField':  result = value === matchFieldvalue ? true : false; break;
+      case 'minLength': result = value.length >= minLength ? true : false;  break;
+      case 'maxLength':  result = value.length <= maxLength ? true : false;  break;
+      case 'minMaxLength': result = value?.length >= minLength && value?.length <= maxLength  ? true : false;  break;
+      default: error.message = `rule not register [${rule}]` ;break;
+    }
+    if(!Regex){
+        data = result;
+    }else{
+      const regex_test = new RegExp(Regex,"g");
+      data = regex_test.test(value);
+      regex_test.lastIndex = 0;
+    }
+    return {error,data};
+  } catch (error) {
+    return {error:"Se presento un problema en la api [listRex]",data:null};
+  }  
 }
-}
-export const startUp = async ({data,schema})=>{
-  let error={};
-  const dataUserObj = {};
-    for (const value of Object.entries(schema)) {
-      for (const valueChildlren of value[1].rules) {
-        const keyName=value[0];
-        const ruleName = valueChildlren.name; 
-        const valueField = data[value[0]];
-        const matchField = valueChildlren.matchField || undefined;
-        const matchFieldvalue = data[matchField] || undefined;
-        const minLength = valueChildlren.minLength || undefined;
-        const maxLength = valueChildlren.maxLength || undefined;
-        const result = await listRex({field:keyName,rule:ruleName,value:valueField,matchField,matchFieldvalue,minLength,maxLength});
-        if(!result){
-          error[keyName]=valueChildlren.message;
-        }else if(!valueChildlren.ignoreFieldForsave){
-          dataUserObj[keyName]=valueField;
+export const startUp = async ({data,schema,ignoreRules={}})=>{
+  try{      
+        let error={};
+        const dataUserObj = {};
+          for (const value of Object.entries(schema)) {
+            for (const valueChildlren of value[1].rules) {
+              const keyName=value[0];
+              const ruleName = valueChildlren.name;
+              const valueField = typeof data[value[0]] === 'string'? data[value[0]].trim() : data[value[0]] ;
+              const matchField = valueChildlren.matchField || undefined;
+              const matchFieldvalue = data[matchField] || undefined;
+              const minLength = valueChildlren.minLength || undefined;
+              const maxLength = valueChildlren.maxLength || undefined;
+              const urlQuery = valueChildlren.urlQuery || undefined;
+
+              let result = ignoreRules?.[keyName]?.rules?.some((valueScope)=>{
+              console.log(valueScope[ruleName]); 
+
+                return valueScope?.[ruleName] || false;
+              }) || await listRex({field:keyName,rule:ruleName,value:valueField,matchField,matchFieldvalue,minLength,maxLength,urlQuery});
+              if(result?.error?.message){
+                error[keyName]=result?.error?.message;
+              }else if(result === false || result?.data===false){
+                error[keyName]=valueChildlren?.message;
+              }else if(!valueChildlren?.ignoreFieldForsave){
+                dataUserObj[keyName]=valueField;
+              }
+            }
         }
+        return {error,dataUserObj};
+      } catch (error) {
+        return {error:"Se presento un problema en la api [startUp]",dataUserObj:{}}
       }
-  }
-  return {error,dataUserObj};
 }
+/*export const startUp = async ({data,schema})=>{
+  try {
+        let error={};
+        const dataUserObj = {};
+        for (const value of Object.entries(schema)) {
+          for (const valueChildlren of value[1]?.rules) {
+                const keyName=value[0];
+                const ruleName = valueChildlren.name; 
+                const valueField = data[value[0]];
+                const matchField = valueChildlren.matchField || undefined;
+                const matchFieldvalue = data[matchField] || undefined;
+                const minLength = valueChildlren.minLength || undefined;
+                const maxLength = valueChildlren.maxLength || undefined;
+                const result = await listRex({field:keyName,rule:ruleName,value:valueField,matchField,matchFieldvalue,minLength,maxLength});
+                if(result?.error?.message){
+                  error[keyName]=result?.error?.message;
+                }else if(!result?.data){
+                  error[keyName]=valueChildlren?.message;
+                }else if(!valueChildlren?.ignoreFieldForsave){
+                  dataUserObj[keyName]=valueField;
+                }
+          }
+        }
+    return {error,dataUserObj};
+  } catch (error) {
+      return {error:"Se presento un problema en la api [startUp]",dataUserObj:{}}
+  }
+}*/
 export async function checkIsUnique({field,value,infoUser=false}){
   const query = {[field]:value};
   const dataResponse = await fetch(`${URLAPI}/api/users/checkisunique`, {
@@ -259,9 +314,8 @@ export async function checkIsUnique({field,value,infoUser=false}){
 return dataResponse;
 
 }
-export async function getloginAuthGoogle({client_id,credential}){
-  const dataUpdate = {client_id,credential};
-
+export async function getloginAuthGoogle({client_id,credential,typeLoggin = "login"}){
+  const dataUpdate = {client_id,credential,typeLoggin};
   const dataResponse = await fetch(`${URLAPI}/api/users/logingoogle`, {
     method: 'POST',
     headers: {
@@ -277,8 +331,7 @@ export async function getloginAuthGoogle({client_id,credential}){
     setLocal(dataSendObj);
     return {validate:true,...dataSendObj};
   });
-return dataResponse;
-
+  return dataResponse;
 } 
 export async function getlogin({username,password}){
     const dataUpdate = {username,password};

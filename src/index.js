@@ -18,6 +18,7 @@ import Logout,{loader as loaderLogout} from './routes/users/logout';
 import Main , {loader as loaderMain} from  './main';
 import Profile,{action as actionProfile,loader as loaderProfile} from './routes/users/profile';
 import Register,{action as actionRegister} from './routes/users/register';
+import { Password as ChangePassword, loader as passwordLoader } from './routes/users/password';
 import Password ,{action as actionPassword} from './routes/password';
 const router = createBrowserRouter([
   {
@@ -43,7 +44,11 @@ const router = createBrowserRouter([
             loader: addLoader,
             action: addAction,
           },
-          
+          {
+            path:"/users/password",
+            element: <ChangePassword />,
+            loader:passwordLoader
+          },
           
           {
             path: "/users/config",
