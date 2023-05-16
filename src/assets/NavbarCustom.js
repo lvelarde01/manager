@@ -9,10 +9,13 @@ export default function NavbarCustom() {
     return (
     <div className={`fixed-top navbar navbar-expand-lg ${Auth.theme || theme}-style-navbar`}>
         <div className="container-md">
-            <Link className="navbar-brand" to={'/'}>
-    <img src="/logo32.png" width="30" height="30" className="d-inline-block align-top" alt=""/>
-    Mr Delivery
-  </Link>
+            <Link className="navbar-brand" to={'/login'}>
+            <img src="/logo32.png" width="30" height="30" className="d-inline-block align-top" alt=""/>
+            Mr Delivery
+          </Link>
+          <Link className="nav-link" to={'/login'}>
+          <i className="fa-solid fa-right-to-bracket me-2"></i>Acceder
+          </Link>
         </div>
     </div>
   )
