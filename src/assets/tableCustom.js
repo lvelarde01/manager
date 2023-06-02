@@ -15,6 +15,7 @@ export function CheckBoxCustom({setCheckAll,checkAll,onChange,idsCheckbox=[],set
         const checkClick = idsCheckbox[currentPage]?.includes(value) || false;
         setCheck(checkClick) 
     },[idsCheckbox,currentPage,value,checkAll]);
+
    const handlerOnChange = (event)=>{
         const checkClick = event.currentTarget.checked;
 
@@ -27,6 +28,7 @@ export function CheckBoxCustom({setCheckAll,checkAll,onChange,idsCheckbox=[],set
                     return pre;
             });
         }
+
         if(typeof setIdsCheckbox === "function"){
             setIdsCheckbox((pre)=>{
                 let {[currentPage]:currentRow=[],...all} = pre;
@@ -69,14 +71,10 @@ export default function TableCustom({columm=[],rows=[],actions}) {
     const [checkAll,setCheckAll] = useState({});
     const [idsCheckbox,setIdsCheckbox] = useState({});
 
-    const handlerCheckAll = (event)=>{
+    const handlerCheckAll = (event,result)=>{
         const checkClick = event.currentTarget.checked; 
-
         console.log("checkAll");
-        const result = rowState.map((value)=>value.id); 
-        console.log({result});
-        console.log({idsCheckbox});
-
+         result = result.map((value)=>value.id); 
         if(checkClick){
             setIdsCheckbox((pre)=>{
                 let {[currentPage]:currentRow=[],...all} = pre;
@@ -94,10 +92,9 @@ export default function TableCustom({columm=[],rows=[],actions}) {
     const paginateGood = React.useCallback((array, page_size, page_number) => {
         return array.slice(page_number * page_size, page_number * page_size + page_size);
       },[]);
-    const loadData = React.useCallback(()=>{
         const columm_all = [...columm].filter((value)=>value?.hide!==true);
         columm_all.push({label:"Action",field:'action'});
-        columm_all.unshift({label:<CheckBoxCustom setCheckAll={setCheckAll} checkAll={checkAll} onChange={handlerCheckAll} currentPage={currentPage} value={"all"} />,field:'check'});
+        columm_all.unshift({label:<CheckBoxCustom setCheckAll={setCheckAll} checkAll={checkAll} onChange={event=>handlerCheckAll(event,result)} currentPage={currentPage} value={"all"} />,field:'check'});
         const row_all = [...rows].map((row)=>{
             const data = {};
             for(let value of columm_all){
@@ -115,20 +112,9 @@ export default function TableCustom({columm=[],rows=[],actions}) {
         });
         const maxPages = Math.ceil(rows.length / limitRow);
         const result = paginateGood(row_all,limitRow,currentPage);
-        setColummState(columm_all);
-        setTotalPages(maxPages);
-        setRowState(result);
-
-    },[setColummState,setRowState,paginateGood,columm,rows,actions,limitRow,currentPage,checkAll,setCheckAll,idsCheckbox,setIdsCheckbox])
-
-    useEffect(()=>{
-        if(rowState.length>0)return;
-        loadData();
-    },[loadData,rowState])
-
-    useEffect(()=>{
-        loadData();
-    },[loadData,currentPage])
+       // setColummState(columm_all);
+       // setTotalPages(maxPages);
+       // setRowState(result);
 
     const handlerChangePage = (event,numberPage)=>{
         event.preventDefault();
@@ -144,14 +130,14 @@ export default function TableCustom({columm=[],rows=[],actions}) {
     const generateItems = () => {
         const items = [];
         let countPositions = 1;
-        for(let i = startPages; i < totalPages;i++){
+        for(let i = startPages; i < maxPages;i++){
             if(countPositions===6)break;
           items.push(<li className={`page-item ${(currentPage)===i ? 'active' : ''}`}  key={i}><Link className="page-link" onClick={(e)=>handlerChangePage(e,i)}>{Number(i)+1}</Link></li>);
           countPositions++;
         }
-        if(totalPages>5){
-              items.push(<li className={`page-item disabled`}  key={totalPages+1}><Link className="page-link">..</Link></li>);
-              items.push(<li className={`page-item disabled`}  key={totalPages+2}><Link className="page-link">{totalPages}</Link></li>);
+        if(maxPages>5){
+              items.push(<li className={`page-item disabled`}  key={maxPages+1}><Link className="page-link">..</Link></li>);
+              items.push(<li className={`page-item disabled`}  key={maxPages+2}><Link className="page-link">{maxPages}</Link></li>);
               
             }
         return items;
@@ -174,11 +160,11 @@ export default function TableCustom({columm=[],rows=[],actions}) {
                 <table className='table table-hover table-bordered ' tabIndex={1}>
                     <thead className='sticky-top table-primary'>
                         <tr>
-                            {colummState.map(key=><td key={key.field}>{key.label}</td>)}
+                            {columm_all.map(key=><td key={key.field}>{key.label}</td>)}
                         </tr>
                     </thead>
                     <tbody>
-                        {rowState.map((row,index)=>(<tr key={row?.id}>{colummState.map((key,index)=><td key={(row.id+index)}>{row[key.field]}</td>)}</tr>))}
+                        {result.map((row,index)=>(<tr key={row?.id}>{columm_all.map((key,index)=><td key={(row.id+index)}>{row[key.field]}</td>)}</tr>))}
                     </tbody>
                 </table>
             
@@ -189,8 +175,8 @@ export default function TableCustom({columm=[],rows=[],actions}) {
                         <li className={`page-item ${currentPage === 0? 'disabled':'' }`}><Link className="page-link" tabIndex="-1" onClick={(e)=>handlerChangePage(e,0)} aria-disabled="true">Primera</Link></li>
                         <li className={`page-item ${currentPage === 0? 'disabled':'' }`}><Link className="page-link" tabIndex="-1" onClick={(e)=>handlerChangePage(e,currentPage-1)} aria-disabled="true">Anterior</Link></li>
                                     {generateItems()}
-                        <li className={`page-item ${(totalPages-1)===currentPage? 'disabled':'' }`}><Link className="page-link"  onClick={(e)=>handlerChangePage(e,currentPage+1)}>Siguiente</Link></li>
-                        <li className={`page-item ${(totalPages-1)===currentPage? 'disabled':'' }`}><Link className="page-link"  onClick={(e)=>handlerChangePage(e,totalPages-1)} >Ultimo</Link></li>
+                        <li className={`page-item ${(maxPages-1)===currentPage? 'disabled':'' }`}><Link className="page-link"  onClick={(e)=>handlerChangePage(e,currentPage+1)}>Siguiente</Link></li>
+                        <li className={`page-item ${(maxPages-1)===currentPage? 'disabled':'' }`}><Link className="page-link"  onClick={(e)=>handlerChangePage(e,maxPages-1)} >Ultimo</Link></li>
 
                     </ul>
                 </nav>
