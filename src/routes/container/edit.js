@@ -52,7 +52,7 @@
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData);
         
-        const {error,dataUserObj} = await startUp({data,schema:schema_container,ignoreRules:{name:{rules:[{'isUnique':true}]}}});
+        const {error,dataUserObj} = await startUp({data,schema:schema_container});
         if(Object.entries(error).length > 0){
             setTimeout(()=>{
               setFetchReady({ready:true,msgtype:'danger',message:''});
