@@ -10,6 +10,7 @@ export default function InputCustom({
   setErrorField,
   parentClassname = 'col mb-3 ms-2 mx-0',
   classNameField='form-control',
+  labelFieldEnable = true,
   minField,
   maxField,
   onChange,
@@ -36,7 +37,7 @@ export default function InputCustom({
     },[valueField,setInputValue]);
   return (
         <div className={parentClassname}>
-          <label style={{fontSize:'11px',color:'blue',fontWeight:'bold'}}>{inputValue&&placeholderField} {errorsField?.[nameField] &&<strong style={{color:'#dc3545'}}>*</strong>}</label>
+          {labelFieldEnable&&<label style={{fontSize:'11px',color:'blue',fontWeight:'bold'}}>{inputValue&&placeholderField} {errorsField?.[nameField] &&<strong style={{color:'#dc3545'}}>*</strong>}</label>}
           <input type={typeField} value={inputValue} style={{padding:'0px'}} name={nameField} min={minField} max={maxField} className={classNameField} placeholder={placeholderField} required onChange={handlerOnchange} />
           {errorsField?.[nameField] && <div style={{padding:'1px',border:'2px solid #dc3545',borderRadius:'8px'}} className='text-danger mt-1 text-center' >{errorsField?.[nameField]}</div>}
         </div>

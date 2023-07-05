@@ -3,57 +3,23 @@ import {Link, useHref} from 'react-router-dom';
 import InputCustom from '../assets/inputCustom';
 import { cloneDeep, cloneDeepWith, set } from 'lodash';
 
-export function CheckBoxCustom({setCheckAll,checkAll,onChange,idsCheckbox=[],setIdsCheckbox,value,currentPage}){
+export function CheckBoxCustom({chekedCustom,onChange,value}){
     const [check,setCheck] = useState(false);
     useEffect(()=>{
-        if(value ==="all"){
-            const checkAllValue = checkAll?.hasOwnProperty(currentPage) ? checkAll[currentPage] :[];
-            const checkClick = checkAllValue?.includes(value) || false;
-            setCheck(checkClick); 
-            return;
-        };
-        const checkClick = idsCheckbox[currentPage]?.includes(value) || false;
-        setCheck(checkClick) 
-    },[idsCheckbox,currentPage,value,checkAll]);
+        console.error({value});
+        console.warn({chekedCustom});
+
+        //if(value !== "all")return;
+        console.warn("work")
+        setCheck(chekedCustom) 
+    },[chekedCustom,value]);
 
    const handlerOnChange = (event)=>{
         const checkClick = event.currentTarget.checked;
-
-        if(typeof setCheckAll === "function" && value !=="all"){
-            setCheckAll((pre)=>{
-                let {[currentPage]:currentRow=[],...all} = pre || {};
-                    if(!checkClick){
-                        return  {...all,[currentPage]:''}
-                    }
-                    return pre;
-            });
-        }
-
-        if(typeof setIdsCheckbox === "function"){
-            setIdsCheckbox((pre)=>{
-                let {[currentPage]:currentRow=[],...all} = pre;
-                if(checkClick && !currentRow?.includes(value)){
-                    currentRow.push(value);
-                }else if(!checkClick){
-                    currentRow = currentRow?.filter((query)=>query !==value); 
-                }
-                return {...all,[currentPage]:currentRow}; 
-            });
-        }
-
         if(typeof onChange === "function"){
             onChange(event);
-            setCheckAll((pre)=>{
-                let {[currentPage]:currentRow=[],...all} = pre || {};
-                    if(!checkClick){
-                        return  {...all}
-                    }
-                return {...all,[currentPage]:"all"}; 
-            });
         }
-
         setCheck(checkClick);
-    console.warn({idsCheckbox});
    }
 
     return (
@@ -70,6 +36,25 @@ export default function TableCustom({columm=[],rows=[],actions}) {
     const [currentPage,setCurrentPage] = useState(0);
     const [checkAll,setCheckAll] = useState({});
     const [idsCheckbox,setIdsCheckbox] = useState({});
+
+    const handlerChangeCheck = (event,currentPage)=>{
+        const checkClick = event.currentTarget.checked;
+        const value = event.currentTarget.value;
+        console.log({checkClick})
+        console.log({idsCheckbox})
+
+
+        setIdsCheckbox((pre)=>{
+            let {[currentPage]:currentRow=[],...all} = pre;
+            if(checkClick && !currentRow?.includes(value)){
+                currentRow.push(value);
+            }else if(!checkClick){
+                currentRow = currentRow?.filter((query)=>query !==value); 
+            }
+            return {...all,[currentPage]:currentRow}; 
+        });
+
+    }
 
     const handlerCheckAll = (event,result)=>{
         const checkClick = event.currentTarget.checked; 
@@ -92,14 +77,17 @@ export default function TableCustom({columm=[],rows=[],actions}) {
     const paginateGood = React.useCallback((array, page_size, page_number) => {
         return array.slice(page_number * page_size, page_number * page_size + page_size);
       },[]);
+
+        let result = [];
         const columm_all = [...columm].filter((value)=>value?.hide!==true);
         columm_all.push({label:"Action",field:'action'});
-        columm_all.unshift({label:<CheckBoxCustom setCheckAll={setCheckAll} checkAll={checkAll} onChange={event=>handlerCheckAll(event,result)} currentPage={currentPage} value={"all"} />,field:'check'});
+        columm_all.unshift({label:<>{idsCheckbox[currentPage]?.length}/{result.length}<CheckBoxCustom chekedCustom = {idsCheckbox[currentPage]?.length === result.length &&  result.length > 0 ? true : false} onChange={event=>handlerCheckAll(event,result)} value={"all"} /></>,field:'check'});
+        
         const row_all = [...rows].map((row)=>{
             const data = {};
             for(let value of columm_all){
                 if(value.field==='check'){
-                    data.check = <CheckBoxCustom setCheckAll={setCheckAll} value={row.id} setIdsCheckbox={setIdsCheckbox} idsCheckbox={idsCheckbox} currentPage={currentPage} />;
+                    data.check = <CheckBoxCustom chekedCustom={idsCheckbox[currentPage]?.includes(row.id) ?? false} value={row.id} onChange={event=>handlerChangeCheck(event,currentPage)} />;
                     continue;
                 }
                 if(value.field==='action'){
@@ -111,7 +99,7 @@ export default function TableCustom({columm=[],rows=[],actions}) {
         return data;
         });
         const maxPages = Math.ceil(rows.length / limitRow);
-        const result = paginateGood(row_all,limitRow,currentPage);
+         result = paginateGood(row_all,limitRow,currentPage);
        // setColummState(columm_all);
        // setTotalPages(maxPages);
        // setRowState(result);
@@ -153,7 +141,6 @@ export default function TableCustom({columm=[],rows=[],actions}) {
             <button className='btn btn-primary'><i className='fa fa-trash me-2'></i>Borrar ({Object.values(idsCheckbox).flat().length})</button>
             <button className='btn btn-primary'><i className='fa fa-book me-2'></i>Exportar</button>
             <button className='btn btn-primary'><i className='fa fa-gear me-2'></i>Ajuste</button>
-        
         </div>
         <div className='col-12'>
             <div className='table-responsive' style={{height:'60vh'}}>

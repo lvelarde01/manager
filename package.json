@@ -12,6 +12,7 @@
     "jsonwebtoken": "^9.0.0",
     "jwt-decode": "3.1.2",
     "localforage": "^1.10.0",
+    "lodash": "^4.17.21",
     "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-apple-login": "^1.1.6",
