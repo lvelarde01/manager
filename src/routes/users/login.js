@@ -25,14 +25,20 @@ export default function Login() {
   }
   
   useEffect(()=>{
-    window.google.accounts.id.initialize({
+    window?.google?.accounts?.id.initialize({
       client_id:process.env.REACT_APP_GOOGLEAPI,
       callback: hanlderLogin,
     });
-    window.google.accounts.id.renderButton(
-      document.getElementById('btnoAuth'),
-      { type: "standard", theme: "filled_blue", size: "large", shape: "rectangular", width: "1024", logo_alignment: "right" },
-    );
+    //window.google.accounts.id.prompt();
+    console.log(window.google.accounts.id.renderButton
+      )
+    window.google.accounts.id.renderButton(document.getElementById("btnoAuth"), {
+      theme: 'filled_blue',
+      size: 'large',
+      type: "standard",
+      shape: "rectangular",
+      logo_alignment: "right"
+    });
   },[]);
 
 
@@ -85,7 +91,10 @@ export default function Login() {
     await handlerAuth(result);
     navigate('/');
   }
-  
+  const handlerGoogleAuth = ()=>{
+    const btnGoogle= document.getElementById("button-label");
+    btnGoogle.click();
+  }
 
   return (
     <div className={`vw-100 ${Auth.theme || theme}-style-login background-default`}>
@@ -100,10 +109,16 @@ export default function Login() {
       <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1 block-radius-style p-5">
         {fetchReady.ready && (<AlertMessage sizeClass={"col-12"} message={fetchReady.message} msgtype={fetchReady.msgtype} typeAlert={"custom"} />) }
         <Form method='post' onSubmit={handlerOnSubmit}>
-          <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-center">
-            
-          <div className='ms-2 mt-2' id='btnoAuth'></div>
-          </div>
+        <div className='mb-3' id='btnoAuth'  style={{paddingLeft:"25%",display:'none'}}></div>
+
+        <div className='row'>
+            <div className='col-12 mt-3 d-flex justify-content-center align-items-start'>
+                <button type='button' className='btn btn-primary w-100'><i className='fa-brands fa-apple me-2'></i>Apple</button>
+            </div>
+            <div className='col-12 mt-3 d-flex justify-content-center align-items-start'>
+              <button type='button' onClick={handlerGoogleAuth} className='btn btn-primary w-100'><i className='fa-brands fa-google me-2'></i>Google</button>
+            </div>
+        </div>
           
           <div className="divider d-flex align-items-center my-4">
             <p className="text-center fw-bold mx-3 mb-0">Iniciar Sesion</p>
