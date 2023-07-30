@@ -41,6 +41,7 @@ export function Index() {
         let values = {[current._id]:current.name};
         return {...acc,...values};
       },{});
+
       const dataContainerObj = Object.values(dataContainer).reduce((acc,current)=>{
         let values = {[current._id]:{name:current.name,date_upload:current.date_upload}};
 
@@ -49,10 +50,12 @@ export function Index() {
 
       const result = Object.values(dataVps).reduce((acc,current)=>{
         let {container_id,collection_id,date_upload,...rest} = current;
+        let dateUpload = dataContainerObj[container_id]?.date_upload || null 
+
         //container
-        let date = new Date(dataContainerObj[container_id].date_upload);
+        let date = new Date(dateUpload);
         date_upload =date.toLocaleDateString('en-gb',{timeZone: "UTC"});
-        container_id=dataContainerObj[container_id].name;
+        container_id=dataContainerObj[container_id]?.name || '';
 
         //colection
         collection_id=collection_id.reduce((acc,current) => {
