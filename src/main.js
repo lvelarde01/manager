@@ -13,6 +13,8 @@ export async function loader({ request , params }){
     return {work:'yes'}; 
   }else if(!userInfo.token && pathname === "/register"){
     return {work:"yes"};
+  }else if(!userInfo.token && pathname === "/home"){
+    return {work:"yes"};
   }else if(!userInfo.token && pathname !== "/login"){
     return redirect("/login");
   }else if(userInfo.token && pathname === "/login"){

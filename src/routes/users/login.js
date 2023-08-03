@@ -31,7 +31,7 @@ export default function Login() {
     });
     window.google.accounts.id.renderButton(
       document.getElementById('btnoAuth'),
-      { type: "standard", theme: "filled_blue", size: "large", shape: "rectangular", width: "1024", logo_alignment: "right" },
+      { type: "standard", theme: "filled_blue", size: "large", shape: "rectangular", logo_alignment: "right" },
     );
   },[]);
 

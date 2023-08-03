@@ -20,6 +20,7 @@ import Profile,{action as actionProfile,loader as loaderProfile} from './routes/
 import Register,{action as actionRegister} from './routes/users/register';
 import { Password as ChangePassword, loader as passwordLoader } from './routes/users/password';
 import Password ,{action as actionPassword} from './routes/password';
+import {Home as ClientHome,loader as ClientHomeLoader} from './routes/clients/home';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -74,6 +75,11 @@ const router = createBrowserRouter([
             path: "/register",
             loader: actionRegister,
             element: <Register />,
+          },
+          {
+            path: "/home",
+            loader: ClientHomeLoader,
+            element: <ClientHome />,
           },
           {
             path: "/password/:token",
