@@ -2,7 +2,8 @@ import React, { useContext,useState,useEffect,useRef,useCallback } from 'react'
 import {Form,Link,useNavigate} from 'react-router-dom';
 import AuthContext from '../../context/auth-context';
 import ThemeContext from '../../context/theme-context';
-import {newUser,getloginAuthGoogle,startUp,schema} from '../../requests/users';
+import {newUser,getloginAuthGoogle,startUp} from '../../requests/users';
+import {schema} from '../../requests/schema/users';
 import AlertMessage from '../../assets/alertmessage';
 import FooterCustom from '../../assets/FooterCustom';
 import NavbarCustom from '../../assets/NavbarCustom';
@@ -52,10 +53,15 @@ export default function Register() {
     event.preventDefault();
     setLoading(true);
     setFetchReady({ready:false,msgtype:'success',message:'default'});
-    const defaultVarsInit = {token:'',theme:'green',photo:'',saveConfigBrowser:false};
+    const defaultVarsInit = {token:'',theme:'blue',photo:'',saveConfigBrowser:false};
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData);
-    const {error,dataUserObj} = await startUp({data,schema});
+    const {error,dataUserObj} = await startUp({data,schema,allowFields:["username","password","repeatpassword","email","role"]});
+    console.log({data});
+    console.log({error});
+
+
+
     if(Object.entries(error).length > 0){
         setTimeout(()=>{
           setFetchReady({ready:true,msgtype:'danger',message:''});
@@ -156,8 +162,9 @@ return (
                                 <legend>INFORMACION DE USUARIO</legend>
                                 <InputCustom  placeholderField={'USUARIO'} nameField={'username'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                                 <InputCustom  placeholderField={'CONTRASENA'} nameField={'password'} typeField='password' parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                                <InputCustom  placeholderField={'CONFIRMAR CONTRASENA'} typeField='password' nameField={'confirm_password'} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                <InputCustom  placeholderField={'CONFIRMAR CONTRASENA'} typeField='password' nameField={'repeatpassword'} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                                 <InputCustom  placeholderField={'CORREO ELECTRONICO'} typeField='email' nameField={'email'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                <InputCustom  placeholderField={''} typeField='hidden' nameField={'role'} valueField='rider' parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                               </div>
                           </>
                       )}
@@ -190,7 +197,7 @@ return (
                                     <legend>INFORMACION DE USUARIO</legend>
                                     <InputCustom  placeholderField={'USUARIO'} nameField={'username'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                                     <InputCustom  placeholderField={'CONTRASENA'} nameField={'password'} typeField='password' parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                                    <InputCustom  placeholderField={'CONFIRMAR CONTRASENA'} typeField='password' nameField={'confirm_password'} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                    <InputCustom  placeholderField={'CONFIRMAR CONTRASENA'} typeField='password' nameField={'repeatpassword'} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                                     <InputCustom  placeholderField={'CORREO ELECTRONICO'} typeField='email' nameField={'email'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                                   </div>
                               </>

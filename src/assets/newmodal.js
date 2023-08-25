@@ -43,20 +43,20 @@ export default function Newmodal({
       };
       const handlerAction = (Event)=>{
         if(typeof handlerActionAccept ===  'function'){
-          handlerActionAccept();
+          handlerActionAccept(Event);
           console.log('Action Work');
         } 
         handlerClose();
       }
       const handlerReset = (event)=>{
         if(typeof handlerActionReset ===  'function'){
-          handlerActionReset();
+          handlerActionReset(event);
           console.log('Reset Work');
         } 
       }
       const handlerSubmit = (event)=>{
         if(typeof handlerActionSubmit ===  'function'){
-          handlerActionSubmit();
+          handlerActionSubmit(event);
           console.log('Submit Work');
         } 
       }

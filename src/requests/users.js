@@ -237,11 +237,15 @@ export const listRex = async ({field,rule,value,matchField,matchFieldvalue,minLe
     return {error:"Se presento un problema en la api [listRex]",data:null};
   }  
 }
-export const startUp = async ({data,schema,ignoreRules={}})=>{
+export const startUp = async ({data,schema,ignoreRules={},allowFields=[],denieFields=[]})=>{
   try{      
         let error={};
         const dataUserObj = {};
+        
           for (const value of Object.entries(schema)) {
+            if(allowFields.length > 1 && !allowFields.some((query) => query === value[0])){
+              continue;
+            } 
             for (const valueChildlren of value[1].rules) {
               const keyName=value[0];
               const ruleName = valueChildlren.name;

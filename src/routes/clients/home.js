@@ -16,19 +16,25 @@ export async function loader({ request }) {
 
 export function Home() {
   const [inputSearch,SetInputSearch] =  useState("");
-  const handlerSearch = async(e)=>{
-    const dataUserObj = {data:inputSearch}; 
-    const result = await ActionFetch({dataObj:dataUserObj,UrlFetch:'/api/store/search'});
-    console.log({result});
+  const [data,SetData] =  useState([]);
+
+  const handlerSearch = async(event)=>{
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const data = Object.fromEntries(formData);
+    console.log({data})
+    const result = await ActionFetch({dataObj:data,UrlFetch:'/api/store/search'});
+    SetData(result);
+    //console.log({result});
   }
   
 
   return (
         <>
           <NavbarCustom>
-               <form className="d-flex">
-                <input className="form-control" type="search" onChange={(e)=>SetInputSearch(e.currentTarget.value)} style={{width:"600px"}} placeholder="Buscar Tienda o Comida" aria-label="Buscar tienda o comida"/>
-                <button onClick={handlerSearch}  className="btn btn-primary" type="button"><i className="fa-solid fa-magnifying-glass"></i></button>
+               <form className="d-flex" onSubmit={handlerSearch}>
+                <input className="form-control" type="search" name='query' onChange={(e)=>SetInputSearch(e.currentTarget.value)} style={{width:"600px"}} placeholder="Buscar Tienda o Comida" aria-label="Buscar tienda o comida"/>
+                <button className="btn btn-primary" type="submit"><i className="fa-solid fa-magnifying-glass"></i></button>
               </form>
           </NavbarCustom>
           <div className='container-fluid' style={{marginTop:"60px"}} >
@@ -59,7 +65,7 @@ export function Home() {
                 </div>
                       <div className='col-9 pt-5'>
                         <h4 className='text-center'>Tiendas Disponibles</h4>
-                              <div className='row' style={{maxHeight:"500px",maxWidth:"auto",overflowY:"scroll",overflowX:"hidden"}} ><StoreView data={[1,2,3,4]} /></div>
+                              <div className='row' style={{maxHeight:"500px",maxWidth:"auto",overflowY:"scroll",overflowX:"hidden"}} ><StoreView data={data} /></div>
                         </div>
               </div>
           </div>
