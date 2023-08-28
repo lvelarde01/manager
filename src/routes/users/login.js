@@ -16,10 +16,17 @@ export default function Login() {
   
   async function hanlderLogin(response){
       const result = await getloginAuthGoogle(response);
-       await handlerAuth(result);
-      navigate('/');
+
+      if(!result?.validate){ 
+        setFetchReady({ready:true,msgtype:'danger',message:'Correo no registrado'});
+         console.warn({result});
+      }else{
+        setFetchReady({ready:true,msgtype:'success',message:'Acceso Correcto'});
+        await handlerAuth(result);
+        navigate('/');
+      }
     
-    console.log(response);
+    console.warn({response});
     let dataUserObj = jwt_decode(response.credential);
     console.log(dataUserObj);
   }
@@ -44,6 +51,7 @@ export default function Login() {
   const [errors,setErrors] = useState({});
   const [loading,setLoading] = useState(false);
   const [showPW,setShowPW] = useState(false);
+
 
   const handlerShowPW = ()=>{
     setShowPW(!showPW);

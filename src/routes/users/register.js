@@ -138,41 +138,41 @@ return (
       <div id='btnoAuth'  style={{display:'none'}}></div>
 
       <NewModal title={'REGISTRO DE RIDER'} actionSubmit={showRegister} actionReset={showRegister} idModal="riderModal" msgtype={"form"} handlerActionSubmit={handlerOnSubmit} startModal={true} handlerActionReset={()=>console.log('work Reset')}>
-            <div className={`container-fluid ${Auth.theme || theme}-style`}>
-                  <div className='row'>
-                  <fieldset>
-                  {fetchReady.ready && (<AlertMessage sizeClass={"col-12"} typeAlert={'custom'} message={fetchReady.message} msgtype={fetchReady.msgtype} />) }
+                    <div className={`container-fluid ${Auth.theme || theme}-style`}>
                       <div className='row'>
-                          <legend>ACCEDE</legend>
-                          <div className='col d-flex justify-content-center align-items-start'>
-                              <button type='button' className='btn btn-primary'><i className='fa-brands fa-apple me-2'></i>Apple</button>
-                          </div>
-                          <div className='col d-flex justify-content-center align-items-start'>
-                            <button type='button' onClick={handlerGoogleAuth} className='btn btn-primary'><i className='fa-brands fa-google me-2'></i>Google</button>
-                          </div>
-                          <div className='col d-flex justify-content-center align-items-start'>
-                              <button type='button' onClick={handlerShwoRegister} className='btn btn-primary'><i className='fa fa-envelope me-2'></i>Correo</button>
-                          </div>
-                        </div>
+                            <fieldset>
+                                  {fetchReady.ready && (<AlertMessage sizeClass={"col-12"} typeAlert={'custom'} message={fetchReady.message} msgtype={fetchReady.msgtype} />) }
+                                <div className='row'>
+                                    <legend>ACCEDE</legend>
+                                    <div className='col d-flex justify-content-center align-items-start'>
+                                        <button type='button' className='btn btn-primary'><i className='fa-brands fa-apple me-2'></i>Apple</button>
+                                    </div>
+                                    <div className='col d-flex justify-content-center align-items-start'>
+                                      <button type='button' onClick={handlerGoogleAuth} className='btn btn-primary'><i className='fa-brands fa-google me-2'></i>Google</button>
+                                    </div>
+                                    <div className='col d-flex justify-content-center align-items-start'>
+                                        <button type='button' onClick={handlerShwoRegister} className='btn btn-primary'><i className='fa fa-envelope me-2'></i>Correo</button>
+                                    </div>
+                                  </div>
 
-                        {showRegister &&(
-                          <>
-                            <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom"></div>
-                              <div className='row pt-3'>
-                                <legend>INFORMACION DE USUARIO</legend>
-                                <InputCustom  placeholderField={'USUARIO'} nameField={'username'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                                <InputCustom  placeholderField={'CONTRASENA'} nameField={'password'} typeField='password' parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                                <InputCustom  placeholderField={'CONFIRMAR CONTRASENA'} typeField='password' nameField={'repeatpassword'} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                                <InputCustom  placeholderField={'CORREO ELECTRONICO'} typeField='email' nameField={'email'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                                <InputCustom  placeholderField={''} typeField='hidden' nameField={'role'} valueField='rider' parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                              </div>
-                          </>
-                      )}
-                  </fieldset>
-                  </div>
+                                  {showRegister &&(
+                                    <>
+                                      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom"></div>
+                                        <div className='row pt-3'>
+                                          <legend>INFORMACION DE USUARIO</legend>
+                                          <InputCustom  placeholderField={'USUARIO'} nameField={'username'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                          <InputCustom  placeholderField={'CONTRASENA'} nameField={'password'} typeField='password' parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                          <InputCustom  placeholderField={'CONFIRMAR CONTRASENA'} typeField='password' nameField={'repeatpassword'} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                          <InputCustom  placeholderField={'CORREO ELECTRONICO'} typeField='email' nameField={'email'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                          <InputCustom  placeholderField={''} typeField='hidden' nameField={'role'} valueField='rider' parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                        </div>
+                                    </>
+                                    )}
+                            </fieldset>
+                      </div>
                   </div>
       </NewModal>
-      <NewModal title={'REGISTRO DE COMERCIO'} idModal="comerceModal" msgtype={"form"} handlerActionSubmit={handlerOnSubmit} startModal={true} handlerActionReset={()=>console.log('work Reset')}>
+      <NewModal title={'REGISTRO DE COMERCIO'} idModal="comerceModal" msgtype={"form"} actionSubmit={showRegister} actionReset={showRegister} handlerActionSubmit={handlerOnSubmit} startModal={true} handlerActionReset={()=>console.log('work Reset')}>
           <div className={`container-fluid ${Auth.theme || theme}-style`}>
                       <div className='row'>
                       <fieldset>
@@ -199,6 +199,7 @@ return (
                                     <InputCustom  placeholderField={'CONTRASENA'} nameField={'password'} typeField='password' parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                                     <InputCustom  placeholderField={'CONFIRMAR CONTRASENA'} typeField='password' nameField={'repeatpassword'} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                                     <InputCustom  placeholderField={'CORREO ELECTRONICO'} typeField='email' nameField={'email'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                    <InputCustom  placeholderField={''} typeField='hidden' nameField={'role'} valueField='comerce' parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                                   </div>
                               </>
                           )}
@@ -206,7 +207,7 @@ return (
                       </div>
                       </div>
       </NewModal>
-      <NewModal title={'REGISTRO DE CLIENTE'} idModal="clientModal" msgtype={"form"} handlerActionSubmit={handlerOnSubmit} startModal={true} handlerActionReset={()=>console.log('work Reset')}>
+      <NewModal title={'REGISTRO DE CLIENTE'} idModal="clientModal" msgtype={"form"} actionSubmit={showRegister} actionReset={showRegister} handlerActionSubmit={handlerOnSubmit} startModal={true} handlerActionReset={()=>console.log('work Reset')}>
       <div className={`container-fluid ${Auth.theme || theme}-style`}>
                   <div className='row'>
                   <fieldset>
@@ -231,8 +232,9 @@ return (
                                 <legend>INFORMACION DE USUARIO</legend>
                                 <InputCustom  placeholderField={'USUARIO'} nameField={'username'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                                 <InputCustom  placeholderField={'CONTRASENA'} nameField={'password'} typeField='password' parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                                <InputCustom  placeholderField={'CONFIRMAR CONTRASENA'} typeField='password' nameField={'confirm_password'} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                <InputCustom  placeholderField={'CONFIRMAR CONTRASENA'} typeField='password' nameField={'repeatpassword'} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                                 <InputCustom  placeholderField={'CORREO ELECTRONICO'} typeField='email' nameField={'email'} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
+                                <InputCustom  placeholderField={''} typeField='hidden' nameField={'role'} valueField='client' parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                               </div>
                           </>
                       )}
