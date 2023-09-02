@@ -9,7 +9,7 @@ export async function loader({ request , params }){
   const url = new URL(request.url);
   const pathname = url.pathname;
   const query_url = "/password/"+ params.token || null;
- /* if(pathname === query_url){
+ if(pathname === query_url){
     return {work:'yes'}; 
   }else if(!userInfo.token && pathname === "/register"){
     return {work:"yes"};
@@ -19,7 +19,7 @@ export async function loader({ request , params }){
     return redirect("/login");
   }else if(userInfo.token && pathname === "/login"){
     return redirect("/");
-  }*/
+  }
   return {pathname,userInfo};
 } 
 export default function Main() {

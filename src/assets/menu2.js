@@ -13,24 +13,23 @@ export default function Menu2({sidebar}) {
     const [currentBtn,setcurrentBtn] = useState({});
     const [dataObj,setDataObj] = useState({});
 
-    const client_options = {
+    const moderator_options = {
       "dashboard":{show:false},
-      "history_purchase":{show:false},
-      "address":{show:false},
-      "cards":{show:false},
-      "login":{show:false},
-    };
-    const rider_options = {
-      "dashboard":{show:false},
+      "users":{show:false},
       "history_delivery":{show:false},
       "history_payment":{show:false},
-      "wallet":{show:true},
       "login":{show:false},
     };
-    const comerce_options = {
+    const teacher_options = {
       "dashboard":{show:false},
-      "products":{show:false},
-      "history_sold":{show:false},
+      "users":{show:false},
+      "history_delivery":{show:false},
+      "history_payment":{show:false},
+      "login":{show:false},
+    };
+    const admon_options = {
+      "dashboard":{show:false},
+      "users":{show:false},
       "history_delivery":{show:false},
       "history_payment":{show:false},
       "login":{show:false},
@@ -43,29 +42,7 @@ export default function Menu2({sidebar}) {
       "login":{show:false},
     };
 
-    const client_options_patch = {
-      "dashboard":{show:false,title:"Inicio",classicon:"fas fa-home fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
-      "history_purchase":{show:false,title:"Historial de Compras",classicon:"fas fa-box fa-fw me-3",childrens:[{name:"Nuevo Producto",path:"/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Productos",path:"/products/add",classicon:"fas fa-list-alt fa-fw me-1"}]},
-      "address":{show:false,title:"Mis Direcciones",classicon:"fas fa-users fa-fw me-3",childrens:[{name:"Registro",path:"/users/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Usuarios",path:"/users",classicon:"fas fa-list-alt fa-fw me-1"}]},
-      "cards":{show:false,title:"Mis Tarjetas",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
-      "login":{show:false,title:"Cuenta",classicon:"fas fa-key fa-fw me-3",childrens:[{name:"Perfil",path:"/profile",classicon:"fas fa-user fa-fw me-1"},{name:"Contraseña",path:"/users/password",classicon:"fas fa-unlock-keyhole fa-fw me-1"},{name:"Salir",path:"/logout",classicon:"fas fa-right-from-bracket fa-fw me-1 me-1"}]}
-    };
-    const rider_options_patch = {
-      "dashboard":{show:false,title:"Inicio",classicon:"fas fa-home fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
-      "history_delivery":{show:false,title:"Historial de Delivery",classicon:"fas fa-box fa-fw me-3",childrens:[{name:"Nuevo Producto",path:"/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Productos",path:"/products/add",classicon:"fas fa-list-alt fa-fw me-1"}]},
-      "history_payment":{show:false,title:"Historial de Pagos",classicon:"fas fa-users fa-fw me-3",childrens:[{name:"Registro",path:"/users/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Usuarios",path:"/users",classicon:"fas fa-list-alt fa-fw me-1"}]},
-      "wallet":{show:false,title:"Mis Billetera",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
-      "login":{show:false,title:"Cuenta",classicon:"fas fa-key fa-fw me-3",childrens:[{name:"Perfil",path:"/profile",classicon:"fas fa-user fa-fw me-1"},{name:"Contraseña",path:"/users/password",classicon:"fas fa-unlock-keyhole fa-fw me-1"},{name:"Salir",path:"/logout",classicon:"fas fa-right-from-bracket fa-fw me-1 me-1"}]}
-    };
-    const comerce_options_patch = {
-      "dashboard":{show:false,title:"Inicio",classicon:"fas fa-home fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
-      "products":{show:false,title:"Productos",classicon:"fas fa-box fa-fw me-3",childrens:[{name:"Nuevo Producto",path:"/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Productos",path:"/products/add",classicon:"fas fa-list-alt fa-fw me-1"}]},
-      "history_sold":{show:false,title:"Ventas",classicon:"fas fa-users fa-fw me-3",childrens:[{name:"Registro",path:"/users/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Usuarios",path:"/users",classicon:"fas fa-list-alt fa-fw me-1"}]},
-      "history_delivery":{show:false,title:"Envios",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
-      "history_payment":{show:false,title:"Pagos",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
-      "login":{show:false,title:"Cuenta",classicon:"fas fa-key fa-fw me-3",childrens:[{name:"Perfil",path:"/profile",classicon:"fas fa-user fa-fw me-1"},{name:"Contraseña",path:"/users/password",classicon:"fas fa-unlock-keyhole fa-fw me-1"},{name:"Salir",path:"/logout",classicon:"fas fa-right-from-bracket fa-fw me-1 me-1"}]}
-    };
-    const admin_options_patch = {
+    const moderator_options_patch = {
       "dashboard":{show:false,title:"Inicio",classicon:"fas fa-home fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
       "products":{show:false,title:"Productos",classicon:"fas fa-box fa-fw me-3",childrens:[{name:"Nuevo Producto",path:"/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Productos",path:"/products/add",classicon:"fas fa-list-alt fa-fw me-1"}]},
       "users":{show:false,title:"Usuarios",classicon:"fas fa-users fa-fw me-3",childrens:[{name:"Registro",path:"/users/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Usuarios",path:"/users",classicon:"fas fa-list-alt fa-fw me-1"}]},
@@ -73,26 +50,50 @@ export default function Menu2({sidebar}) {
       "history_payment":{show:false,title:"Pagos",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
       "login":{show:false,title:"Cuenta",classicon:"fas fa-key fa-fw me-3",childrens:[{name:"Perfil",path:"/profile",classicon:"fas fa-user fa-fw me-1"},{name:"Contraseña",path:"/users/password",classicon:"fas fa-unlock-keyhole fa-fw me-1"},{name:"Configuracion",path:"/users/config",classicon:"fas fa-gear fa-fw me-1"},{name:"Salir",path:"/logout",classicon:"fas fa-right-from-bracket fa-fw me-1 me-1"}]}
     };
+    const teacher_options_patch = {
+      "dashboard":{show:false,title:"Inicio",classicon:"fas fa-home fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
+      "products":{show:false,title:"Productos",classicon:"fas fa-box fa-fw me-3",childrens:[{name:"Nuevo Producto",path:"/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Productos",path:"/products/add",classicon:"fas fa-list-alt fa-fw me-1"}]},
+      "users":{show:false,title:"Usuarios",classicon:"fas fa-users fa-fw me-3",childrens:[{name:"Registro",path:"/users/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Usuarios",path:"/users",classicon:"fas fa-list-alt fa-fw me-1"}]},
+      "history_delivery":{show:false,title:"Envios",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
+      "history_payment":{show:false,title:"Pagos",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
+      "login":{show:false,title:"Cuenta",classicon:"fas fa-key fa-fw me-3",childrens:[{name:"Perfil",path:"/profile",classicon:"fas fa-user fa-fw me-1"},{name:"Contraseña",path:"/users/password",classicon:"fas fa-unlock-keyhole fa-fw me-1"},{name:"Configuracion",path:"/users/config",classicon:"fas fa-gear fa-fw me-1"},{name:"Salir",path:"/logout",classicon:"fas fa-right-from-bracket fa-fw me-1 me-1"}]}
+    };
+    const admon_options_patch = {
+      "dashboard":{show:false,title:"Inicio",classicon:"fas fa-home fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
+      "products":{show:false,title:"Productos",classicon:"fas fa-box fa-fw me-3",childrens:[{name:"Nuevo Producto",path:"/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Productos",path:"/products/add",classicon:"fas fa-list-alt fa-fw me-1"}]},
+      "users":{show:false,title:"Usuarios",classicon:"fas fa-users fa-fw me-3",childrens:[{name:"Registro",path:"/users/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Usuarios",path:"/users",classicon:"fas fa-list-alt fa-fw me-1"}]},
+      "history_delivery":{show:false,title:"Envios",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
+      "history_payment":{show:false,title:"Pagos",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
+      "login":{show:false,title:"Cuenta",classicon:"fas fa-key fa-fw me-3",childrens:[{name:"Perfil",path:"/profile",classicon:"fas fa-user fa-fw me-1"},{name:"Contraseña",path:"/users/password",classicon:"fas fa-unlock-keyhole fa-fw me-1"},{name:"Configuracion",path:"/users/config",classicon:"fas fa-gear fa-fw me-1"},{name:"Salir",path:"/logout",classicon:"fas fa-right-from-bracket fa-fw me-1 me-1"}]}
+    };
+    const admin_options_patch = {
+      "dashboard":{show:false,title:"Matricula",classicon:"fas fa-home fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
+      "products":{show:false,title:"Horario",classicon:"fas fa-box fa-fw me-3",childrens:[{name:"Nuevo Producto",path:"/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Productos",path:"/products/add",classicon:"fas fa-list-alt fa-fw me-1"}]},
+      "users":{show:false,title:"Pagos",classicon:"fas fa-credit-card me-3",childrens:[{name:"Registro",path:"/users/add",classicon:"fas fa-plus fa-fw me-1"},{name:"Lista de Usuarios",path:"/users",classicon:"fas fa-list-alt fa-fw me-1"}]},
+      "history_delivery":{show:false,title:"Notas",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"option1",path:"/",classicon:"fas fa-minus fa-fw me-1"},{name:"option2",path:"/",classicon:"fas fa-minus fa-fw me-1"}]},
+      "history_payment":{show:false,title:"Usuarios",classicon:"fas fa-user-tie fa-fw me-3",childrens:[{name:"Lista de usuarios",path:"/users",classicon:"fas fa-list-alt fa-fw me-1"},{name:"Nuevo Usuario",path:"/users/add",classicon:"fas fa-plus fa-fw me-1"}]},
+      "login":{show:false,title:"Cuenta",classicon:"fas fa-key fa-fw me-3",childrens:[{name:"Perfil",path:"/profile",classicon:"fas fa-user fa-fw me-1"},{name:"Contraseña",path:"/users/password",classicon:"fas fa-unlock-keyhole fa-fw me-1"},{name:"Configuracion",path:"/users/config",classicon:"fas fa-gear fa-fw me-1"},{name:"Salir",path:"/logout",classicon:"fas fa-right-from-bracket fa-fw me-1 me-1"}]}
+    };
 
     useEffect(()=>{
       if(Object.keys(dataObj).length > 0)return;
-      if(Auth.role ==="client"){
-        setDataObj({...client_options_patch});
-      }else if(Auth.role ==="rider"){
-        setDataObj({...rider_options_patch});
-      }else if(Auth.role ==="comerce"){
-        setDataObj({...comerce_options_patch});
-      }else  if(Auth.role ==="admin"){
-        setDataObj({...admin_options_patch});
-      }
+         if(Auth.role ==="admin"){
+            setDataObj({...admin_options_patch});
+          }else if(Auth.role ==="moderator"){
+            setDataObj({...moderator_options_patch});
+          }else if(Auth.role ==="teacher"){
+            setDataObj({...teacher_options_patch});
+          }if(Auth.role ==="admon"){
+            setDataObj({...admon_options_patch});
+          }  
     },[Auth])
     useEffect(()=>{
-      if(Auth.role === "client"){
-        setcurrentBtn(client_options);
-      }else if(Auth.role === "rider"){
-        setcurrentBtn(rider_options);
-      }else if(Auth.role === "comerce"){
-        setcurrentBtn(comerce_options);
+      if(Auth.role === "moderator"){
+        setcurrentBtn(moderator_options);
+      }else if(Auth.role === "teacher"){
+        setcurrentBtn(teacher_options);
+      }else if(Auth.role === "admon"){
+        setcurrentBtn(admon_options);
       }else if(Auth.role === "admin"){
         setcurrentBtn(admin_options);
       }

@@ -50,15 +50,7 @@ export const schema = {
                       ],
                       ignoreFieldForsave:true,
                   },
-    company:{  
-            rules:[
-                    {
-                      name:'onlyNumberAndLetterSimbolsSpaces',
-                      message:'Numero y letras. Simbolos permitidos [@,.,-,_,#]'
-                    },
-                  ]
-            },
-    company_ssid:{  
+            ssid:{  
                     rules:[
                             {
                               name:'onlyNumber',

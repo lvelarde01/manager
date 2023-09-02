@@ -10,8 +10,8 @@ export default function NavbarCustom({children}) {
     <div className={`fixed-top navbar navbar-expand-lg ${Auth.theme || theme}-style-navbar`}>
         <div className="container-fluid">
             <Link className="navbar-brand" style={{marginLeft:"20px"}} to={'/'}>
-            <img src="/logo32.png" width="30" height="30" className="d-inline-block align-top" alt=""/>
-            Mr Delivery
+            <img src="/logo.png" width="30" height="30" className="d-inline-block align-top me-2" alt=""/>
+            School
           </Link>
           {children}
           <Link className="nav-link" to={'/login'}>

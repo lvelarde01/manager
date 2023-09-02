@@ -11,7 +11,8 @@ import App,{loader as appLoader} from './App';
 import ErrorPage, {loader as errorLoader} from "./error-page";
 import Home from "./routes/home";
 import Add,{loader as addLoader, action as addAction} from "./routes/users/add";
-import {Index as IndexUser} from "./routes/users/index";
+import {Edit as EditUser,loader as EditUserLoader} from "./routes/users/edit";
+import {Index as IndexUser,loader as userIndexLoader} from "./routes/users/index";
 import Configui from './routes/users/configui';
 import Login,{loader as loaderLogin} from './routes/users/login';
 import Logout,{loader as loaderLogout} from './routes/users/logout';
@@ -34,10 +35,11 @@ const router = createBrowserRouter([
         children: [
           { 
             index: true,
-            element: <ClientHome /> 
+            element: <Home /> 
           },
           {
             path: "/users",
+            loader: userIndexLoader,
             element: <IndexUser />,
           },
           {
@@ -45,6 +47,11 @@ const router = createBrowserRouter([
             element: <Add />,
             loader: addLoader,
             action: addAction,
+          },
+          {
+            path: "/users/edit/:id",
+            loader: EditUserLoader,
+            element: <EditUser />,
           },
           {
             path:"/users/password",

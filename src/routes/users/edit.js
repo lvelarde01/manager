@@ -1,5 +1,5 @@
 import React,{useState,useContext} from 'react';
-import { Outlet, NavLink,Link,  useLoaderData, Form,redirect,useNavigation,useSubmit,useNavigate} from "react-router-dom";
+import { Outlet, NavLink,Link,  useLoaderData, Form,redirect,useNavigation,useSubmit,useNavigate,useParams} from "react-router-dom";
 import { useEffect } from "react";
 import { useOutletContext} from 'react-router-dom'
 import AuthContext from '../../context/auth-context';
@@ -9,13 +9,12 @@ import InputCustom from '../../assets/inputCustom';
 import SelectCustom from '../../assets/selectCustom';
 import { newUser,startUp } from '../../requests/users';
 import { schema } from '../../requests/schema/users';
+import { ActionFetch } from '../../requests/utilsApis';
 
-export async function loader({ request }) {
-  console.log("Add");
-  const url = new URL(request.url);
-  const q = url.searchParams.get("q");
-  //const contacts = await getContacts(q);
-    return {q};
+export async function loader({ request,params }) {
+    const {id} = params;
+    const data = await ActionFetch( {dataObj:{_id:id},UrlFetch:'/api/users/find'});
+    return {...data};
   }
   
 export async function action({ request, params }) {
@@ -26,20 +25,19 @@ export async function action({ request, params }) {
 
 
 
-export default function Add() {
+export function Edit() {
 //const [count, setCount] = useOutletContext();
 
- // const contact = useLoaderData();
  const handleSubmit = async (event) =>{
   event.preventDefault();
   setLoading(true);
   setFetchReady({ready:false,msgtype:'success',message:'default'});
+  const _id = event.currentTarget.id
   const formData = new FormData(event.currentTarget);
-  const defaultVarsInit = {token:'',theme:'blue',photo:'',saveConfigBrowser:false};
   const data = Object.fromEntries(formData);
-  const {error,dataUserObj} = await startUp({data,schema,allowFields:["username","password","repeatpassword","email","role"]});
+  const {error,dataUserObj} = await startUp({data,schema,ignoreRules:{username:{rules:[{'isUnique':true}]}},allowFields:["username","firstname","lastname","ssid","phone","email","role"]});
 
-  console.log(data);
+  console.log({error});
   if(Object.entries(error).length > 0){
     setTimeout(()=>{
       setFetchReady({ready:true,msgtype:'danger',message:''});
@@ -49,13 +47,14 @@ export default function Add() {
     return;
   }
   console.log("NO ERRORS");
-  const result = await newUser({...dataUserObj,...defaultVarsInit});
-  if(result.acknowledged){
-    setTimeout(()=>{
-      setFetchReady({ready:true,msgtype:'success',message:''});
-      setLoading(false);
-    },3000);
-  }
+  dataUserObj._id = _id;
+  const result = await ActionFetch({dataObj:dataUserObj,UrlFetch:'/api/users/update'});
+
+  const msgtype = result?.acknowledged ? 'success' : 'danger'; 
+  setTimeout(()=>{
+    setFetchReady({ready:true,msgtype:msgtype,message:''});
+    setLoading(false);
+  },3000);
 
 }
  const {Auth,handlerAuth} = useContext(AuthContext);
@@ -65,12 +64,13 @@ export default function Add() {
 
  const dataUserObj = useLoaderData();
  const navigate = useNavigate();
+ console.log({dataUserObj});
 
   return (
     <div className={`row justify-content-center ${Auth.theme}-style`} >
     {fetchReady.ready && (<AlertMessage message={fetchReady.message} msgtype={fetchReady.msgtype} typeAlert={"custom"} />) }
     <div className='row ms-3 mt-3 block-radius-style'>
-        <Form className='col-12 mt-3' method='post' onSubmit={handleSubmit}  >
+        <Form className='col-12 mt-3' method='post' onSubmit={handleSubmit} id={dataUserObj?._id}  >
           <fieldset>
           <div className="mb-3">
             <h2>REGISTRO DE USUARIO</h2>
@@ -78,8 +78,6 @@ export default function Add() {
               <div className='row'>
                     <legend>DETALLES DE USUARIO</legend>
                         <InputCustom  placeholderField={'USUARIO'} nameField={'username'} valueField={dataUserObj?.username} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                        <InputCustom  placeholderField={'CONTRASENA'} typeField={"password"} nameField={'password'} valueField={dataUserObj?.password} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                        <InputCustom  placeholderField={'REPETIR CONTRASENA'} typeField={"password"} nameField={'repeatpassword'} valueField={dataUserObj?.repeatpassword} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                         <SelectCustom placeholderField='ROL DE USUARIO' nameField={'rol'} valueField={dataUserObj?.rol} optionsField={{admin:'Admin',moderador:'Moderador',teacher:'Teacher',admon:'Administrativo'}} parentClassname={'col-12 mb-3'} />
                     <legend>DETALLES  PERSONALES</legend>
                         <InputCustom  placeholderField={'NOMBRES'} nameField={'firstname'} valueField={dataUserObj?.firstname} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
