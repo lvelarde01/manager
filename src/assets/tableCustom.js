@@ -27,7 +27,7 @@ export function CheckBoxCustom({chekedCustom,onChange,value}){
     );
 }
 
-export default function TableCustom({columm=[],rows=[],actions}) {
+export default function TableCustom({columm=[],rows=[],actions,AliasID="_id"}) {
     const [rowState,setRowState] = useState([]);
     const [colummState,setColummState] = useState([]);
     const [limitRow,setLimitRow] = useState(10);
@@ -59,7 +59,7 @@ export default function TableCustom({columm=[],rows=[],actions}) {
     const handlerCheckAll = (event,result)=>{
         const checkClick = event.currentTarget.checked; 
         console.log("checkAll");
-         result = result.map((value)=>value.id); 
+         result = result.map((value)=>value[AliasID]); 
         if(checkClick){
             setIdsCheckbox((pre)=>{
                 let {[currentPage]:currentRow=[],...all} = pre;
@@ -87,11 +87,11 @@ export default function TableCustom({columm=[],rows=[],actions}) {
             const data = {};
             for(let value of columm_all){
                 if(value.field==='check'){
-                    data.check = <CheckBoxCustom chekedCustom={idsCheckbox[currentPage]?.includes(row.id) ?? false} value={row.id} onChange={event=>handlerChangeCheck(event,currentPage)} />;
+                    data.check = <CheckBoxCustom chekedCustom={idsCheckbox[currentPage]?.includes(row[AliasID]) ?? false} value={row[AliasID]} onChange={event=>handlerChangeCheck(event,currentPage)} />;
                     continue;
                 }
                 if(value.field==='action'){
-                    data.action = actions(row.id);
+                    data.action = actions(row[AliasID]);
                     continue;
                 }
                 data[value.field]=row[value.field];
@@ -151,7 +151,7 @@ export default function TableCustom({columm=[],rows=[],actions}) {
                         </tr>
                     </thead>
                     <tbody>
-                        {result.map((row,index)=>(<tr key={row?.id}>{columm_all.map((key,index)=><td key={(row.id+index)}>{row[key.field]}</td>)}</tr>))}
+                        {result.map((row,index)=>(<tr key={row[AliasID]}>{columm_all.map((key,index)=><td key={(row[AliasID]+index)}>{row[key.field]}</td>)}</tr>))}
                     </tbody>
                 </table>
             
