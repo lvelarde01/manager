@@ -23,7 +23,7 @@ export default function Login() {
       }else{
         setFetchReady({ready:true,msgtype:'success',message:'Acceso Correcto'});
         await handlerAuth(result);
-        navigate('/');
+        navigate('/profile');
       }
     
     console.warn({response});
@@ -91,7 +91,7 @@ export default function Login() {
     }
 
     await handlerAuth(result);
-    navigate('/');
+    navigate('/profile');
   }
   const handlerGoogleAuth = ()=>{
     const btnGoogle= document.getElementById("button-label");

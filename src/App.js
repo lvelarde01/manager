@@ -34,9 +34,8 @@ export default function App() {
           <Menu2 sidebar={sidebarOn} /> 
           <div className='container-fluid background-default'>
             <div className='row'>
-            <Menubar2 sidebarON={handlerSidebarOn} />
-            {navigation.state === "loading"?<><Spingloading /></>:<><Outlet/></>}
-            
+                  <Menubar2 sidebarON={handlerSidebarOn} />
+                  {navigation.state === "loading"?<><Spingloading /></>:<><Outlet/></>}
             </div>
           </div>
       </>
