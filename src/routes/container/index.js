@@ -14,7 +14,7 @@ export async function loader({ request }) {
       const FetchWareHouse =  ActionFetch({},'/api/warehouse/list');
       const FetchVps =  ActionFetch({},'/api/vps/list');
       const FetchCollection =  ActionFetch({ fieldsObj:{_id:true,name:true} },'/api/collection/list');
-      const FetchCalenar =  ActionFetch({department_id:'6401764b1d77e264d5b02929'},'/api/calendars/list');
+      const FetchCalenar =  ActionFetch({},'/api/calendars/list');
 
 
 
@@ -530,7 +530,7 @@ export function Index() {
     return Math.min(acc,new Date(date_upload).getTime());
   }, maxDate);
 
-  const resultCalenarFilter = dataInfo.resultCalenar.filter((value)=>{
+  const resultCalenarFilter = dataInfo?.resultCalenar?.filter((value)=>{
     let {date_register} = value;
     let dateRangeFrom = selectInputRef?.current['from']?.value;
     let dateRangeTo = selectInputRef?.current['to']?.value;
