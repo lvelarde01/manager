@@ -14,7 +14,7 @@ export async function loader({ request }) {
       const FetchWareHouse =  ActionFetch({},'/api/warehouse/list');
       const FetchVps =  ActionFetch({},'/api/vps/list');
       const FetchCollection =  ActionFetch({ fieldsObj:{_id:true,name:true} },'/api/collection/list');
-      const FetchCalenar =  ActionFetch({},'/api/calendars/list');
+      const FetchCalenar =  ActionFetch({department_id:'6504b1cc09817a94fcd35f82'},'/api/calendars/list');
 
 
 
