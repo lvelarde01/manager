@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import {Link, useHref} from 'react-router-dom';
 import InputCustom from '../assets/inputCustom';
+import NewModal from './newmodal';
 import { cloneDeep, cloneDeepWith, set } from 'lodash';
 
 export function CheckBoxCustom({chekedCustom,onChange,value}){
@@ -36,6 +37,12 @@ export default function TableCustom({columm=[],rows=[],actions,AliasID="_id"}) {
     const [currentPage,setCurrentPage] = useState(0);
     const [checkAll,setCheckAll] = useState({});
     const [idsCheckbox,setIdsCheckbox] = useState({});
+    const [showRegister,setShowRegister] = useState(false);
+
+    const handlerShwoRegister = (event)=>{
+        console.log("WORDDSS");
+        setShowRegister(!showRegister);
+      }
 
     const handlerChangeCheck = (event,currentPage)=>{
         const checkClick = event.currentTarget.checked;
@@ -140,7 +147,7 @@ export default function TableCustom({columm=[],rows=[],actions,AliasID="_id"}) {
             <button className='btn btn-primary'><i className='fa fa-filter me-2'></i>filter</button>
             <button className='btn btn-primary'><i className='fa fa-trash me-2'></i>Borrar ({Object.values(idsCheckbox).flat().length})</button>
             <button className='btn btn-primary'><i className='fa fa-book me-2'></i>Exportar</button>
-            <button className='btn btn-primary'><i className='fa fa-gear me-2'></i>Ajuste</button>
+            <button onClick={handlerShwoRegister}  className='btn btn-primary'><i className='fa fa-gear me-2'></i>Ajuste</button>
         </div>
         <div className='col-12'>
             <div className='table-responsive' style={{height:'60vh'}}>
@@ -168,6 +175,9 @@ export default function TableCustom({columm=[],rows=[],actions,AliasID="_id"}) {
                     </ul>
                 </nav>
         </div>
+        <NewModal title={'REGISTRO DE RIDER'} actionSubmit={showRegister} actionReset={showRegister} idModal="riderModal" msgtype={"form"} handlerActionSubmit={()=>console.log('work submit')} startModal={true} handlerActionReset={()=>console.log('work Reset')} >
+        <h1> test </h1>
+        </NewModal>
         </>
   )
 }

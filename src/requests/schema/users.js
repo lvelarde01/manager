@@ -94,4 +94,12 @@ export const schema = {
                         },
                       ]
           },
+    phone:{  
+            rules:[
+                    {
+                      name:'onlyNumber',
+                      message:'Numero y letras. Simbolos permitidos [@,.,-,_,#]'
+                    },
+                  ]
+          },
   }

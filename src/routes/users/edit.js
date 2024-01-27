@@ -35,7 +35,7 @@ export function Edit() {
   const _id = event.currentTarget.id
   const formData = new FormData(event.currentTarget);
   const data = Object.fromEntries(formData);
-  const {error,dataUserObj} = await startUp({data,schema,ignoreRules:{username:{rules:[{'isUnique':true}]}},allowFields:["username","firstname","lastname","ssid","phone","email","role"]});
+  const {error,dataUserObj} = await startUp({data,schema,ignoreRules:{username:{rules:[{'isUnique':true}]},email:{rules:[{'isUnique':true}]}},allowFields:["username","firstname","lastname","ssid","phone","email","role"]});
 
   console.log({error});
   if(Object.entries(error).length > 0){
@@ -78,7 +78,7 @@ export function Edit() {
               <div className='row'>
                     <legend>DETALLES DE USUARIO</legend>
                         <InputCustom  placeholderField={'USUARIO'} nameField={'username'} valueField={dataUserObj?.username} parentClassname={'col-12 mb-3'} errorsField={errors} setErrorField = {setErrors} />
-                        <SelectCustom placeholderField='ROL DE USUARIO' nameField={'rol'} valueField={dataUserObj?.rol} optionsField={{admin:'Admin',moderador:'Moderador',teacher:'Teacher',admon:'Administrativo'}} parentClassname={'col-12 mb-3'} />
+                        <SelectCustom placeholderField='ROL DE USUARIO' nameField={'role'} valueField={dataUserObj?.rol} optionsField={{admin:'Admin',moderador:'Moderador',teacher:'Teacher',admon:'Administrativo'}} parentClassname={'col-12 mb-3'} />
                     <legend>DETALLES  PERSONALES</legend>
                         <InputCustom  placeholderField={'NOMBRES'} nameField={'firstname'} valueField={dataUserObj?.firstname} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
                         <InputCustom  placeholderField={'APELLIDOS'} nameField={'lastname'} valueField={dataUserObj?.lastname} parentClassname={'col-6 mb-3'} errorsField={errors} setErrorField = {setErrors} />
@@ -90,7 +90,7 @@ export function Edit() {
               <button type="submit" className="btn btn-primary" disabled={loading}>
                   {loading ? <><span className="spinner-grow spinner-grow-sm me-2"></span><span>Actualizando</span></>  : <><i className="fas fa-floppy-disk me-2"></i>Guardar</> }
               </button>
-              <button type="button" onClick={()=>{navigate('/')}} className="btn btn-primary float-end"><i className='fas fa-arrow-rotate-left me-2'></i>Regresar</button>
+              <button type="button" onClick={()=>{navigate('/users')}} className="btn btn-primary float-end"><i className='fas fa-arrow-rotate-left me-2'></i>Regresar</button>
             </div>
           </fieldset>
         </Form>
